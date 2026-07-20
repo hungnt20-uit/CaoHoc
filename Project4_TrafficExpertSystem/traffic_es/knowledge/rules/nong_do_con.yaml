@@ -1,0 +1,20 @@
+rules:
+  - id: R_CON_OTO_MUC3
+    nhom: nong_do_con
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "chiso.nongDoCon_khiTho > 0.4"
+    ket_luan:
+      hanh_vi: "Điều khiển ô tô mà trong hơi thở có nồng độ cồn vượt quá 0,4 mg/l"
+      tien_phat_min: 30000000
+      tien_phat_max: 40000000
+      phat_bo_sung: { tuoc_gplx_thang: [22, 24] }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 11, diem: "a" }
+    giai_thich_mau: "Nồng độ cồn vượt 0,4 mg/l → khung phạt cao nhất."
+
+meta_rules:
+  - id: M_TANG_NANG_TAI_NAN
+    loai: tinh_tiet
+    dieu_kien: ["tinhtiet.gay_tai_nan == true"]
+    chon_muc: max
+    ghi_chu: "Tình tiết tăng nặng: áp mức tiền tối đa của khung."
