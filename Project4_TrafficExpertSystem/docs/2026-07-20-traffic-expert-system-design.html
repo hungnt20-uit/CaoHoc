@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spec — Project 4: Hệ chuyên gia luật giao thông</title>
+<style>
+:root{--fg:#1a1a1a;--muted:#5b6470;--bg:#ffffff;--soft:#f6f8fa;--border:#d7dde3;--accent:#0b62c4;--accent-soft:#e8f1fb;--code:#0a3d62;}
+@media(prefers-color-scheme:dark){:root{--fg:#e6e8eb;--muted:#9aa4b0;--bg:#0f1216;--soft:#171b21;--border:#2a323c;--accent:#5aa2f0;--accent-soft:#14243a;--code:#8ecbff;}}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif;line-height:1.65;font-size:16px}
+.wrap{max-width:900px;margin:0 auto;padding:48px 28px 96px}
+h1{font-size:1.85rem;line-height:1.25;margin:.2em 0 .4em;letter-spacing:-.01em}
+h1+h1{margin-top:0;color:var(--accent)}
+h2{font-size:1.35rem;margin:2.2em 0 .6em;padding-bottom:.3em;border-bottom:2px solid var(--border)}
+h3{font-size:1.1rem;margin:1.6em 0 .5em}
+p{margin:.7em 0}
+a{color:var(--accent)}
+ul,ol{padding-left:1.4em;margin:.6em 0}
+li{margin:.25em 0}
+strong{font-weight:650}
+hr{border:0;border-top:1px solid var(--border);margin:2.4em 0}
+blockquote{margin:1em 0;padding:.6em 1em;background:var(--accent-soft);border-left:4px solid var(--accent);border-radius:0 6px 6px 0;color:var(--fg)}
+blockquote p{margin:.3em 0}
+code{font-family:"SF Mono",ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace;font-size:.86em;background:var(--soft);padding:.12em .38em;border-radius:5px;color:var(--code);border:1px solid var(--border)}
+pre{background:var(--soft);border:1px solid var(--border);border-radius:10px;padding:14px 16px;overflow-x:auto;margin:1em 0}
+pre code{background:none;border:0;padding:0;color:var(--fg);font-size:.82rem;line-height:1.55}
+.tablewrap{overflow-x:auto;margin:1.1em 0}
+table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{border:1px solid var(--border);padding:8px 11px;text-align:left;vertical-align:top}
+th{background:var(--accent-soft);font-weight:650}
+tr:nth-child(even) td{background:var(--soft)}
+.doc-meta{color:var(--muted);font-size:.9rem}
+@media print{body{font-size:11.5pt}.wrap{max-width:none;padding:0}h2{page-break-after:avoid}pre,table,blockquote{page-break-inside:avoid}a{color:var(--fg);text-decoration:none}}
+</style>
+</head>
+<body>
+<main class="wrap">
+<h1 id="ac-ta-thiet-ke-design-spec">Đặc tả thiết kế (Design Spec)</h1>
+<h1 id="project-4-he-thong-chuyen-gia-tu-van-hanh-vi-vi-pham-luat-giao-thong-dua-tren-reasoning">Project 4 — Hệ thống Chuyên gia Tư vấn Hành vi Vi phạm Luật Giao thông dựa trên Reasoning</h1>
+<ul>
+<li><strong>Môn học:</strong> Chuyên đề Tri thức và Ứng dụng (Cao học — UIT)</li>
+<li><strong>Ngày:</strong> 2026-07-20</li>
+<li><strong>Khung lý thuyết áp dụng:</strong> Legal-Onto (<code>𝒦 = (Conc, Rel, Rules) ⊕ (Keyphrases, Rela)</code>) + Mạng tính toán <code>(M, R)</code> với mô hình bài toán <code>(H, Goal)</code> + Pipeline đồ thị câu hỏi (Question-Graph / Subgraph Matching) — theo trường phái PGS.TS. Nguyễn Đình Hiển.</li>
+<li><strong>Kiến trúc:</strong> Neuro-symbolic (Hybrid) — LLM lo ngôn ngữ, engine ký hiệu lo pháp lý + giải thích.</li>
+</ul>
+<hr>
+<h2 id="1-muc-tieu-pham-vi">1. Mục tiêu &amp; Phạm vi</h2>
+<h3 id="11-muc-tieu">1.1. Mục tiêu</h3>
+<p>Xây dựng Hệ chuyên gia có khả năng <strong>suy luận ngữ nghĩa tự động</strong>: nhận mô tả hiện trường bằng <strong>ngôn ngữ tự nhiên tiếng Việt (kể cả câu phức tạp)</strong> → tự động tổng hợp <strong>tình tiết tăng nặng/giảm nhẹ</strong> → đưa ra <strong>quyết định xử phạt</strong> kèm <strong>căn cứ pháp lý (Điều/Khoản/Điểm của Nghị định)</strong> và <strong>chuỗi giải thích minh bạch</strong>.</p>
+<h3 id="12-san-pham-bat-buoc-theo-e">1.2. Sản phẩm bắt buộc (theo đề)</h3>
+<ol>
+<li>Giao diện chatbot xử lý ngôn ngữ tự nhiên tiếng Việt phức tạp.</li>
+<li>Cơ chế giải thích chuỗi suy luận (Explainable AI): chỉ rõ <em>tại sao</em> quy ra lỗi đó và <em>áp dụng điều khoản nào</em>.</li>
+<li>Báo cáo thử nghiệm hiệu năng.</li>
+</ol>
+<h3 id="13-nguyen-tac-kien-truc-bat-bien">1.3. Nguyên tắc kiến trúc (bất biến)</h3>
+<ul>
+<li><strong>Mọi quyết định phạt do engine ký hiệu quyết định</strong>, không để LLM tự sinh con số/căn cứ.</li>
+<li><strong>Truy xuất nguồn 100%</strong>: mỗi kết luận gắn đúng Điều/Khoản/Điểm văn bản gốc.</li>
+<li><strong>Chống "ảo giác" pháp lý</strong>: LLM đề xuất → validator ontology phê duyệt.</li>
+<li><strong>Ánh xạ thuật ngữ</strong>: ngôn ngữ đời thường của dân → thuật ngữ chuẩn trong luật.</li>
+</ul>
+<h3 id="14-quyet-inh-a-chot">1.4. Quyết định đã chốt</h3>
+<ul>
+<li>Sản phẩm: <strong>hệ thống chạy thật đầy đủ</strong>.</li>
+<li>Ngôn ngữ lập trình: <strong>Python</strong>.</li>
+<li>LLM: <strong>API trả phí</strong> (OpenAI/Claude/Gemini), có lớp trừu tượng để đổi provider.</li>
+<li>Nguồn luật: <strong>người dùng cung cấp</strong> văn bản Nghị định 100/2019, 123/2021, 168/2024.</li>
+<li>Giao tiếp: <strong>tiếng Việt là chính</strong>, xử lý tốt tiếng Việt phức tạp.</li>
+<li>A*: <strong>hiện thực ở mức gọn</strong>; gộp phạt trình bày <strong>rõ ràng, dễ hiểu</strong>.</li>
+</ul>
+<hr>
+<h2 id="2-nen-tang-tri-thuc-mo-hinh-legal-onto">2. Nền tảng tri thức: Mô hình Legal-Onto</h2>
+<p>Mô hình tri thức tuân theo Legal-Onto:</p>
+<pre><code>𝒦 = (Conc, Rel, Rules) ⊕ (Keyphrases, Rela)
+     └──── Rela-model ────┘   └── Knowledge Graph ──┘
+</code></pre>
+<h3 id="21-concept-khai-niem-cau-truc-5-thanh-phan">2.1. Concept (khái niệm) — cấu trúc 5 thành phần</h3>
+<p>Mỗi concept: <strong><code>(Name, Content, InnerRul, Attrs, Keyphrases)</code></strong></p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Thành phần</th>
+<th>Ý nghĩa</th>
+<th>Ví dụ (concept "Xe mô tô")</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Name</code></td>
+<td>Tên khái niệm</td>
+<td>"xe mô tô"</td>
+</tr>
+<tr>
+<td><code>Content</code></td>
+<td>Định nghĩa/nội dung</td>
+<td>"Phương tiện giao thông cơ giới đường bộ hai/ba bánh…"</td>
+</tr>
+<tr>
+<td><code>InnerRul</code></td>
+<td>Căn cứ pháp lý gắn trong concept</td>
+<td>Điều 3.39, QCVN 41:2016/BGTVT</td>
+</tr>
+<tr>
+<td><code>Attrs</code></td>
+<td>Thuộc tính/khái niệm con</td>
+<td>dung tích xi-lanh, trọng lượng</td>
+</tr>
+<tr>
+<td><code>Keyphrases</code></td>
+<td>Cụm từ khóa (cho KG &amp; so khớp)</td>
+<td>["xe máy", "mô tô", "xe gắn máy"]</td>
+</tr>
+</tbody>
+</table></div>
+<p><strong>Danh mục Concept của miền giao thông:</strong>
+<code>PhuongTien</code>, <code>NguoiDieuKhien</code>, <code>HanhVi</code>, <code>ChiSo</code> (đo lường), <code>BoiCanh</code>, <code>TinhTiet</code>, <code>HinhPhat</code>.</p>
+<p><strong>Thuộc tính chính (Attrs) theo Concept:</strong>
+- <code>PhuongTien</code>: loai {ô tô, xe máy, xe máy chuyên dùng, xe đạp…}, taiTrong, soChoNgoi.
+- <code>NguoiDieuKhien</code>: coGPLX, hangGPLX, tuoi, diemGPLX_conLai.
+- <code>HanhVi</code>: ma, moTa, nhom {nồng độ cồn, tốc độ, tín hiệu, làn, giấy tờ…}.
+- <code>ChiSo</code>: nongDoCon_khiTho (mg/l), nongDoCon_mau (mg/100ml), tocDo (km/h), tocDoGioiHan.
+- <code>BoiCanh</code>: khuVuc {khu dân cư, cao tốc, đô thị…}, thoiDiem, thoiTiet, bienBao.
+- <code>TinhTiet</code>: loai {tăng nặng / giảm nhẹ}, ma, moTa.
+- <code>HinhPhat</code>: tienPhat_min, tienPhat_max, phatBoSung {tước GPLX, trừ điểm, tạm giữ xe}, canCu {nghiDinh, dieu, khoan, diem}.</p>
+<h3 id="22-relation-quan-he-3-nhom">2.2. Relation (quan hệ) — 3 nhóm</h3>
+<ul>
+<li><code>R_hier</code>: quan hệ phân cấp <code>is-a</code>, <code>has-a</code> (vd: <em>xe máy</em> is-a <em>phương tiện</em>).</li>
+<li><code>R_con</code>: quan hệ kết nối <code>a-part-of</code> và quan hệ nhị phân khác.</li>
+<li><code>R_Phrases</code>: quan hệ giữa keyphrase và concept (vd: "điều khiển" relates-to "xe máy").</li>
+<li>Quan hệ nghiệp vụ: <code>viPham</code>, <code>dieuKhien</code>, <code>apDungCho</code>, <code>dan_den</code>, <code>quyDinhBoi</code>, <code>dieuChinh</code>.</li>
+</ul>
+<h3 id="23-knowledge-graph-keyphrases-rela">2.3. Knowledge Graph (Keyphrases, Rela)</h3>
+<ul>
+<li>Node = concept/thực thể; cạnh = quan hệ.</li>
+<li>Mỗi keyphrase gán <strong>trọng số TF-IDF</strong> để đo tầm quan trọng, phục vụ so khớp câu hỏi.</li>
+<li>Tối ưu đồ thị: loại bộ ba vô nghĩa (TF-IDF thấp), gộp bộ ba tương đương (cosine embedding PhoBERT ≥ α, α≈0.6–0.8).</li>
+</ul>
+<h3 id="24-rules-inh-dang-luat-yaml">2.4. Rules — định dạng luật (YAML)</h3>
+<p>Mỗi hành vi vi phạm = 1 rule, ánh xạ 1–1 tới Điều/Khoản/Điểm:</p>
+<pre><code class="language-yaml">- id: R_CON_OTO_MUC3
+  nhom: nong_do_con
+  ap_dung_loai_xe: [o_to]
+  dieu_kien:                         # LHS
+    - chiso.nongDoCon_khiTho &gt; 0.4     # hoặc nongDoCon_mau &gt; 80
+  ket_luan:                          # RHS
+    hanh_vi: &quot;Điều khiển ô tô mà trong hơi thở có nồng độ cồn vượt quá 0,4 mg/l&quot;
+    tien_phat_min: 30000000
+    tien_phat_max: 40000000
+    phat_bo_sung: { tuoc_gplx_thang: [22, 24], tru_diem: null }
+    can_cu: { nghi_dinh: &quot;168/2024/NĐ-CP&quot;, dieu: 6, khoan: 11, diem: &quot;a&quot; }
+  giai_thich_mau: &quot;Nồng độ cồn {gt} mg/l &gt; 0,4 mg/l → khung phạt cao nhất.&quot;
+
+# Meta-rule điều chỉnh khung phạt theo tình tiết
+- id: M_TANG_NANG_TAI_NAN
+  loai: tinh_tiet
+  dieu_kien: [ &quot;tinhtiet.gay_tai_nan == true&quot; ]
+  hieu_ung: { chon_muc: &quot;max&quot;, ghi_chu: &quot;Tình tiết tăng nặng: áp mức tiền tối đa của khung&quot; }
+</code></pre>
+<blockquote>
+<p>⚠️ Con số ví dụ là minh họa; <strong>thay bằng số chính xác từ văn bản Nghị định</strong> khi số hóa.</p>
+</blockquote>
+<hr>
+<h2 id="3-so-hoa-tri-thuc-knowledge-acquisition-quy-trinh-text-mining">3. Số hóa tri thức (Knowledge Acquisition) — Quy trình Text Mining</h2>
+<p>Xây KB từ văn bản Nghị định theo quy trình khai thác văn bản 5 bước:
+1. <strong>Tiền xử lý:</strong> tách câu/từ (tokenization), POS tagging, chunking. Công cụ tiếng Việt: <code>underthesea</code> / <code>VnCoreNLP</code> / <strong>PhoBERT</strong>.
+2. <strong>Trích xuất bộ ba/keyphrase:</strong> dependency parsing → (Chủ thể, Quan hệ, Đối tượng); trích keyphrase pháp lý. <strong>LLM hỗ trợ</strong> trích luật (điều kiện → hình phạt → căn cứ).
+3. <strong>Chọn lọc:</strong> loại từ dừng, tính TF-IDF, gộp keyphrase đồng nghĩa.
+4. <strong>Xây KB:</strong> đổ vào Concept/Relation/Rules + Knowledge Graph; <strong>chuyên gia rà soát</strong> (human-in-the-loop) để đảm bảo chính xác pháp lý.
+5. <strong>Xuất artifact:</strong> <code>rules/*.yaml</code>, <code>ontology.owl</code> (owlready2/rdflib — mở bằng Protégé), đồ thị KG.</p>
+<p><strong>Phạm vi ban đầu:</strong> ưu tiên các nhóm hành vi phổ biến/nhiều tình tiết (nồng độ cồn, tốc độ, tín hiệu đèn, làn đường, giấy tờ, mũ bảo hiểm/dây an toàn), mở rộng dần.</p>
+<hr>
+<h2 id="4-engine-suy-dien-mang-tinh-toan-m-r">4. Engine suy diễn — Mạng tính toán <code>(M, R)</code></h2>
+<h3 id="41-hinh-thuc-luan-ung-mon-hoc">4.1. Hình thức luận (đúng môn học)</h3>
+<ul>
+<li><strong>Mạng:</strong> <code>(M, R)</code> — <code>M</code> = tập biến/thuộc tính (M = M_num ∪ M_func), <code>R</code> = tập luật. Mỗi luật <code>r</code>: đẳng thức giữa biến, hoặc luật dẫn <code>u(r) → v(r)</code>.</li>
+<li><strong>Mô hình bài toán:</strong> <code>(H, Goal)</code> — <code>H</code> = giả thiết (Facts hiện trường), <code>Goal = ("KEYWORD", ListObj)</code> với KEYWORD ∈ {"Tìm", "Tính", "Chứng minh"}.</li>
+<li><strong>Lời giải:</strong> danh sách luật <code>S = [r₁, …, r_k]</code> sao cho <code>S(H) = r_k(…r₁(H)…) ⊨ Goal</code>. <strong>"Lời giải tốt"</strong> = không có tập con nào của <code>S</code> cũng là lời giải (tối tiểu).</li>
+<li><strong>Mẫu bài toán <code>(Mp, Goal, Sol)</code>:</strong> lưu các tình huống phạt điển hình làm case-based reasoning.</li>
+</ul>
+<h3 id="42-chu-trinh-suy-dien-deduce_objects-deduce_rules">4.2. Chu trình suy diễn (Deduce_Objects + Deduce_Rules)</h3>
+<pre><code>INFER(H=Facts, KB):
+  WM ← H ; Trace ← []
+  # (1) DEDUCE_OBJECTS — chạy Funcs tính thuộc tính dẫn xuất tới điểm bất động
+  #     vd: vuot_toc_do_% = (tocDo - tocDoGioiHan)/tocDoGioiHan; đổi nồng độ cồn máu↔khí thở
+  repeat: for f in KB.Funcs: if f.inputs⊆WM and f.output∉WM: WM∪={f.out}; Trace+=FUNC
+  until fixpoint
+  # (2) DEDUCE_RULES — forward chaining, so khớp ngưỡng số/logic
+  ViPham ← [ r for r in KB.Rules if MATCH(r.dieu_kien, WM) ] ; Trace += RULE_FIRED
+  # (3) Meta-rule tình tiết tăng nặng/giảm nhẹ
+  for vp in ViPham: for m in KB.MetaRules: if MATCH(m,WM): vp.hp=ADJUST(vp.hp,m); Trace+=META
+  # (4) Tổng hợp
+  return KETLUAN(ViPham, Trace)
+</code></pre>
+<ul>
+<li>Bước (1) = <strong>Deduce_Objects</strong> (tính nội tại đối tượng); Bước (2) = <strong>Deduce_Rules</strong> (áp luật). Vòng lặp tới <strong>điểm bất động</strong> ⇒ đảm bảo tính dừng &amp; đầy đủ trên tập luật hữu hạn.</li>
+</ul>
+<h3 id="43-a-tim-loi-giai-tot-muc-gon-lien-he-bt3">4.3. A* tìm "lời giải tốt" (mức gọn) — liên hệ BT3</h3>
+<ul>
+<li>Mạng suy diễn có trọng số <code>(A, D, w)</code>: <code>A</code>=thuộc tính đã biết, <code>D</code>=luật/hàm, <code>w(r)</code>=chi phí (luật trực tiếp w=1; suy luận LLM w cao hơn).</li>
+<li><strong>A*</strong> với heuristic <code>h(N)</code> = số thuộc tính mục tiêu còn thiếu → chuỗi suy diễn <strong>tổng trọng số nhỏ nhất</strong> (dùng cho suy luận gián tiếp: sự kiện thô → tình tiết → điều chỉnh khung).</li>
+</ul>
+<h3 id="44-gop-phat-ro-rang-de-hieu">4.4. Gộp phạt (rõ ràng, dễ hiểu)</h3>
+<ul>
+<li>Nhiều hành vi → <strong>liệt kê từng lỗi độc lập</strong> (mỗi lỗi: hành vi | Điều/Khoản/Điểm | tiền phạt | phạt bổ sung).</li>
+<li><strong>Tiền phạt: cộng dồn</strong> các lỗi; <strong>hình phạt bổ sung: lấy mức nặng nhất</strong> (tước GPLX dài nhất…).</li>
+<li>Bảng tổng hợp cuối luôn hiển thị dòng "TỔNG" minh bạch.</li>
+<li>Hai luật mâu thuẫn → gắn cờ <em>"cần xác nhận"</em>.</li>
+</ul>
+<h3 id="45-cau-truc-trace-phuc-vu-giai-thich">4.5. Cấu trúc Trace (phục vụ giải thích)</h3>
+<p>Mỗi bước lưu bản ghi <code>[FUNC|RULE|META|ASTAR|KL]</code> với: dữ kiện vào, luật áp dụng, kết luận, căn cứ. Explanation generator duyệt tuần tự → sinh văn tiếng Việt <em>"Vì … nên … chiếu Điều X Khoản Y…"</em>. Con số &amp; căn cứ <strong>bất biến từ engine</strong>; LLM chỉ diễn đạt lại cho mượt.</p>
+<hr>
+<h2 id="5-tich-hop-llm-bai-toan-1-2-pipeline-o-thi-cau-hoi">5. Tích hợp LLM (Bài toán 1 &amp; 2) + Pipeline đồ thị câu hỏi</h2>
+<h3 id="51-bai-toan-2-trich-xuat-tri-thuc-su-kien-nl-ontology">5.1. Bài toán 2 — Trích xuất tri thức sự kiện (NL → Ontology)</h3>
+<p>Pipeline theo module QA của môn học, kết hợp LLM:
+1. <strong>Tiền xử lý câu hỏi:</strong> chuẩn hóa ký tự/viết tắt ("nđc"→nồng độ cồn, "kdc"→khu dân cư), sửa lỗi chính tả, chuẩn hóa số+đơn vị.
+2. <strong>Câu hỏi → đồ thị bộ ba</strong> <code>(Chủ thể, Quan hệ, Đối tượng)</code>: LLM đóng vai <strong>entity recognition</strong> + structured output (JSON), ánh xạ vào node ontology (kèm <code>evidence</code>).
+3. <strong>Phân rã đồ thị sao</strong> (Star Graph Partitioning): tách đồ thị câu hỏi phức tạp thành các sao con quanh mỗi chủ thể.
+4. <strong>So khớp đồ thị con</strong> (Subgraph Matching) với Knowledge Graph của KB (so khớp keyphrase, dùng embedding PhoBERT + TF-IDF).
+5. <strong>Validator ontology (grounding):</strong> kiểm tra tên node/kiểu/đơn vị/miền giá trị hợp lệ → loại fact sai, hỏi lại người dùng. <em>LLM đề xuất, ontology phê duyệt.</em></p>
+<p>Ví dụ JSON Facts đã ánh xạ:</p>
+<pre><code class="language-json">{ &quot;phuongtien&quot;: {&quot;loai&quot;:&quot;o_to&quot;,&quot;evidence&quot;:&quot;lái ô tô&quot;},
+  &quot;chiso&quot;: {&quot;nongDoCon_khiTho&quot;:{&quot;value&quot;:0.42,&quot;unit&quot;:&quot;mg/l&quot;,&quot;evidence&quot;:&quot;thổi nồng độ cồn 0.42&quot;},
+            &quot;tocDo&quot;:{&quot;value&quot;:90,&quot;unit&quot;:&quot;km/h&quot;,&quot;evidence&quot;:&quot;chạy 90&quot;}},
+  &quot;boicanh&quot;: {&quot;khuVuc&quot;:&quot;khu_dan_cu&quot;,&quot;thoiDiem&quot;:&quot;ban_dem&quot;},
+  &quot;raw_events&quot;: [&quot;quẹt trúng một xe máy&quot;] }
+</code></pre>
+<h3 id="52-bai-toan-1-suy-luan-ngu-nghia-tinh-tiethanh-vi-gian-tiep">5.2. Bài toán 1 — Suy luận ngữ nghĩa (tình tiết/hành vi gián tiếp)</h3>
+<ul>
+<li>LLM suy diễn từ <code>raw_events</code>, <strong>chỉ chọn trong danh mục tình tiết đã định nghĩa (closed vocabulary)</strong>, kèm <code>confidence</code> + <code>ly_do</code> + <code>nguon</code>.</li>
+<li>Ví dụ: <code>"quẹt trúng một xe máy"</code> → <code>tinhtiet.gay_tai_nan=true (0.9)</code>.</li>
+<li>Fact suy luận <strong>quay lại làm đầu vào engine §4</strong> (A* nối "sự kiện thô → tình tiết → điều chỉnh khung"). <code>confidence</code> thấp → engine đánh dấu <em>"cần xác nhận"</em>.</li>
+</ul>
+<h3 id="53-luong-du-lieu-tong-the">5.3. Luồng dữ liệu tổng thể</h3>
+<pre><code>Người dùng (NL)
+  │ §5.1 Bài toán 2: tiền xử lý → đồ thị câu hỏi → phân rã sao → subgraph matching (LLM + KG)
+  ▼
+Facts thô ─► Validator ontology (grounding)
+  │ §5.2 Bài toán 1: LLM suy luận tình tiết gián tiếp (closed-vocab)
+  ▼
+Facts đầy đủ ─► ENGINE §4 (Deduce_Objects → A*/forward chaining → Deduce_Rules → meta-rule → gộp phạt)
+  ▼
+Trace + Kết luận ─► Explanation generator (LLM diễn đạt lại; số &amp; căn cứ bất biến)
+  ▼
+Chatbot: hành vi + căn cứ Điều/Khoản/Điểm + tiền phạt + phạt bổ sung + giải thích
+</code></pre>
+<h3 id="54-truu-tuong-hoa-provider">5.4. Trừu tượng hóa provider</h3>
+<p>Interface <code>LLMClient</code> chung → cắm OpenAI/Claude/Gemini bằng config; API key qua biến môi trường (không hard-code); có <strong>cache</strong> để chạy test lặp đỡ tốn phí.</p>
+<hr>
+<h2 id="6-giao-dien-chatbot-streamlit">6. Giao diện Chatbot (Streamlit)</h2>
+<p>Bố cục 2 cột "glass-box":
+- <strong>Cột trái — Hội thoại:</strong> người dùng nhập tình huống; bot hỏi bổ sung khi thiếu dữ kiện hoặc confidence thấp (slot-filling, đa lượt).
+- <strong>Cột phải — 3 tab:</strong>
+  1. <strong>Facts đã trích</strong> (Bài toán 2) — kèm <code>evidence</code>, cho sửa tay.
+  2. <strong>Chuỗi suy diễn</strong> (trace §4) — FUNC/RULE/META/A*.
+  3. <strong>Kết luận &amp; Căn cứ</strong> — bảng mỗi hành vi | Điều/Khoản/Điểm | tiền phạt | phạt bổ sung + dòng TỔNG.</p>
+<p><strong>Xử lý tiếng Việt phức tạp:</strong> chuẩn hóa dấu/viết tắt/số-đơn vị; tách đa vi phạm trong một câu; giữ ngữ cảnh hội thoại nhiều lượt.</p>
+<hr>
+<h2 id="7-anh-gia-hieu-nang">7. Đánh giá hiệu năng</h2>
+<p>Bộ <strong>test set 30–50 tình huống</strong> (dễ→phức tạp, có bẫy tình tiết gián tiếp), gán nhãn vàng (gold). Chỉ số:</p>
+<div class="tablewrap"><table>
+<thead>
+<tr>
+<th>Chỉ số</th>
+<th>Cách đo</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Độ chính xác trích xuất (BT2)</td>
+<td>Facts máy vs gold — precision/recall theo slot</td>
+</tr>
+<tr>
+<td>Độ chính xác kết luận</td>
+<td>hành vi vi phạm đúng/đủ</td>
+</tr>
+<tr>
+<td>Độ chính xác căn cứ pháp lý</td>
+<td>Điều/Khoản/Điểm &amp; khung tiền khớp Nghị định</td>
+</tr>
+<tr>
+<td>Độ chính xác tình tiết gián tiếp (BT1)</td>
+<td>tăng nặng/giảm nhẹ đúng</td>
+</tr>
+<tr>
+<td>Thời gian phản hồi</td>
+<td>tách LLM vs engine ký hiệu</td>
+</tr>
+<tr>
+<td>Chi phí token</td>
+<td>trung bình mỗi truy vấn</td>
+</tr>
+</tbody>
+</table></div>
+<p>Xuất <strong>báo cáo tự động</strong> (bảng số + biểu đồ <code>matplotlib</code>) đưa thẳng vào bài nộp. Đối sánh tham chiếu với kết quả Legal-Onto của thầy (~82.6% trên Luật giao thông VN).</p>
+<hr>
+<h2 id="8-cau-truc-du-an">8. Cấu trúc dự án</h2>
+<pre><code>Project4_TrafficExpertSystem/
+├── knowledge/
+│   ├── ontology.py            # Legal-Onto: Concept(Name,Content,InnerRul,Attrs,Keyphrases), Relations
+│   ├── knowledge_graph.py     # (Keyphrases, Rela) + TF-IDF
+│   ├── rules/                 # luật YAML trích từ NĐ 100/123/168
+│   ├── export_owl.py          # xuất ontology.owl (owlready2)
+│   └── kb_loader.py
+├── engine/
+│   ├── working_memory.py
+│   ├── funcs.py               # Deduce_Objects
+│   ├── forward_chaining.py    # Deduce_Rules + meta-rule + gộp phạt
+│   ├── astar_network.py       # Mạng (M,R), bài toán (H,Goal), A* &quot;lời giải tốt&quot;
+│   ├── sample_problems.py     # Mẫu bài toán (Mp, Goal, Sol)
+│   └── trace.py
+├── nlu/
+│   ├── llm_client.py          # trừu tượng OpenAI/Claude/Gemini + cache
+│   ├── question_graph.py      # câu hỏi → đồ thị bộ ba → phân rã sao
+│   ├── subgraph_matching.py   # so khớp KG (PhoBERT + TF-IDF)
+│   ├── extract_facts.py       # Bài toán 2
+│   ├── semantic_infer.py      # Bài toán 1
+│   └── grounding.py           # validator theo ontology
+├── explain/generator.py       # trace → văn tiếng Việt
+├── app/streamlit_app.py       # chatbot UI
+├── eval/
+│   ├── testset.jsonl          # 30–50 case gold
+│   └── run_eval.py            # sinh báo cáo hiệu năng
+├── docs/                      # spec (file này), báo cáo, slide
+├── requirements.txt · .env.example · README.md
+</code></pre>
+<p><strong>Phụ thuộc chính:</strong> <code>owlready2</code>/<code>rdflib</code>, <code>pyyaml</code>, <code>pydantic</code>, <code>openai</code>/<code>anthropic</code>/<code>google-genai</code>, <code>underthesea</code>/<code>py_vncorenlp</code>, <code>transformers</code> (PhoBERT), <code>streamlit</code>, <code>matplotlib</code>, <code>networkx</code> (đồ thị/A*).</p>
+<hr>
+<h2 id="9-bam-sat-hoc-thuat-tai-lieu-tham-khao">9. Bám sát học thuật &amp; Tài liệu tham khảo</h2>
+<ul>
+<li><strong>Legal-Onto</strong> <code>𝒦 = (Conc, Rel, Rules) ⊕ (Keyphrases, Rela)</code> — mô hình lõi.</li>
+<li><strong>Mạng tính toán</strong> <code>(M, R)</code>, bài toán <code>(H, Goal)</code>, "lời giải tốt", Mẫu bài toán <code>(Mp, Goal, Sol)</code>.</li>
+<li><strong>Pipeline QA:</strong> Question→Graph → Star Decomposition → Subgraph Matching.</li>
+<li>Paper nền (trích trong slide của thầy): Vuong T. Pham — <em>Ontology-based Knowledge Graph Approach for Legal Queries</em>; <em>Building Knowledge Graphs from Legal Documents with LLM-based Entity Recognition</em>; <em>Knowledge Graph-based Legal Query System with LLM and RAG</em> (ACIIDS 2025).</li>
+<li><strong>Hướng phát triển nâng cao (tùy chọn):</strong> logic programming trong không gian vector / partial evaluation (không bắt buộc cho bản chạy).</li>
+</ul>
+<hr>
+<h2 id="10-rui-ro-gia-inh">10. Rủi ro &amp; Giả định</h2>
+<ul>
+<li><strong>Độ chính xác pháp lý</strong> phụ thuộc chất lượng số hóa luật → cần chuyên gia/human-in-the-loop rà soát.</li>
+<li><strong>NĐ 168/2024</strong> hiệu lực 01/2025 thay phần lớn NĐ 100 cho đường bộ → ưu tiên 168, đối chiếu chéo.</li>
+<li><strong>Chi phí LLM</strong> → cache + giới hạn phạm vi test.</li>
+<li><strong>Tiếng Việt phức tạp</strong> → kết hợp NLP tiếng Việt (PhoBERT) + LLM; slot-filling khi thiếu dữ kiện.</li>
+<li>Giả định: người dùng cấp đủ văn bản Nghị định; có API key khi chạy.</li>
+</ul>
+</main>
+</body>
+</html>
