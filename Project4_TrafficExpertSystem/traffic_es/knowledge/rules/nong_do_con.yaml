@@ -1,89 +1,97 @@
 # Nhóm hành vi: NỒNG ĐỘ CỒN — Nghị định 168/2024/NĐ-CP
-# Ngưỡng theo khí thở (mg/l). Số liệu & căn cứ trích & kiểm chứng từ văn bản gốc.
+# Ngưỡng: khí thở (mg/l) HOẶC máu (mg/100ml). Điều kiện OR (any) — luật ghi "máu HOẶC khí thở".
 rules:
   # ================= Ô TÔ (Điều 6) =================
   - id: R_CON_OTO_MUC1
     nhom: nong_do_con
     ap_dung_loai_xe: [o_to]
     dieu_kien:
-      - "chiso.nongDoCon_khiTho > 0"
-      - "chiso.nongDoCon_khiTho <= 0.25"
+      - any:
+          - all: ["chiso.nongDoCon_khiTho > 0", "chiso.nongDoCon_khiTho <= 0.25"]
+          - all: ["chiso.nongDoCon_mau > 0", "chiso.nongDoCon_mau <= 50"]
     ket_luan:
-      hanh_vi: "Điều khiển ô tô mà trong hơi thở có nồng độ cồn chưa vượt quá 0,25 mg/l"
+      hanh_vi: "Điều khiển ô tô mà trong máu/hơi thở có nồng độ cồn chưa vượt quá 50 mg/100ml máu hoặc 0,25 mg/l khí thở"
       tien_phat_min: 6000000
       tien_phat_max: 8000000
       phat_bo_sung: { tru_diem: 4 }
       can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 6, diem: "c" }
-    giai_thich_mau: "Nồng độ cồn ≤ 0,25 mg/l → mức 1 (6–8 triệu, trừ 4 điểm)."
+    giai_thich_mau: "Nồng độ cồn mức 1 (6–8 triệu, trừ 4 điểm)."
 
   - id: R_CON_OTO_MUC2
     nhom: nong_do_con
     ap_dung_loai_xe: [o_to]
     dieu_kien:
-      - "chiso.nongDoCon_khiTho > 0.25"
-      - "chiso.nongDoCon_khiTho <= 0.4"
+      - any:
+          - all: ["chiso.nongDoCon_khiTho > 0.25", "chiso.nongDoCon_khiTho <= 0.4"]
+          - all: ["chiso.nongDoCon_mau > 50", "chiso.nongDoCon_mau <= 80"]
     ket_luan:
-      hanh_vi: "Điều khiển ô tô mà trong hơi thở có nồng độ cồn vượt quá 0,25 đến 0,4 mg/l"
+      hanh_vi: "Điều khiển ô tô mà trong máu/hơi thở có nồng độ cồn vượt 50–80 mg/100ml máu hoặc 0,25–0,4 mg/l khí thở"
       tien_phat_min: 18000000
       tien_phat_max: 20000000
       phat_bo_sung: { tru_diem: 10 }
       can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 9, diem: "a" }
-    giai_thich_mau: "Nồng độ cồn 0,25–0,4 mg/l → mức 2 (18–20 triệu, trừ 10 điểm)."
+    giai_thich_mau: "Nồng độ cồn mức 2 (18–20 triệu, trừ 10 điểm)."
 
   - id: R_CON_OTO_MUC3
     nhom: nong_do_con
     ap_dung_loai_xe: [o_to]
     dieu_kien:
-      - "chiso.nongDoCon_khiTho > 0.4"
+      - any:
+          - "chiso.nongDoCon_khiTho > 0.4"
+          - "chiso.nongDoCon_mau > 80"
     ket_luan:
-      hanh_vi: "Điều khiển ô tô mà trong hơi thở có nồng độ cồn vượt quá 0,4 mg/l"
+      hanh_vi: "Điều khiển ô tô mà trong máu/hơi thở có nồng độ cồn vượt quá 80 mg/100ml máu hoặc 0,4 mg/l khí thở"
       tien_phat_min: 30000000
       tien_phat_max: 40000000
       phat_bo_sung: { tuoc_gplx_thang: [22, 24] }
       can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 11, diem: "a" }
-    giai_thich_mau: "Nồng độ cồn > 0,4 mg/l → mức cao nhất (30–40 triệu, tước GPLX 22–24 tháng)."
+    giai_thich_mau: "Nồng độ cồn mức cao nhất (30–40 triệu, tước GPLX 22–24 tháng)."
 
   # ================= XE MÁY (Điều 7) =================
   - id: R_CON_XEMAY_MUC1
     nhom: nong_do_con
     ap_dung_loai_xe: [xe_may]
     dieu_kien:
-      - "chiso.nongDoCon_khiTho > 0"
-      - "chiso.nongDoCon_khiTho <= 0.25"
+      - any:
+          - all: ["chiso.nongDoCon_khiTho > 0", "chiso.nongDoCon_khiTho <= 0.25"]
+          - all: ["chiso.nongDoCon_mau > 0", "chiso.nongDoCon_mau <= 50"]
     ket_luan:
-      hanh_vi: "Điều khiển xe máy mà trong hơi thở có nồng độ cồn chưa vượt quá 0,25 mg/l"
+      hanh_vi: "Điều khiển xe máy mà trong máu/hơi thở có nồng độ cồn chưa vượt quá 50 mg/100ml máu hoặc 0,25 mg/l khí thở"
       tien_phat_min: 2000000
       tien_phat_max: 3000000
       phat_bo_sung: { tru_diem: 4 }
       can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 6, diem: "a" }
-    giai_thich_mau: "Nồng độ cồn ≤ 0,25 mg/l → mức 1 (2–3 triệu, trừ 4 điểm)."
+    giai_thich_mau: "Nồng độ cồn mức 1 (2–3 triệu, trừ 4 điểm)."
 
   - id: R_CON_XEMAY_MUC2
     nhom: nong_do_con
     ap_dung_loai_xe: [xe_may]
     dieu_kien:
-      - "chiso.nongDoCon_khiTho > 0.25"
-      - "chiso.nongDoCon_khiTho <= 0.4"
+      - any:
+          - all: ["chiso.nongDoCon_khiTho > 0.25", "chiso.nongDoCon_khiTho <= 0.4"]
+          - all: ["chiso.nongDoCon_mau > 50", "chiso.nongDoCon_mau <= 80"]
     ket_luan:
-      hanh_vi: "Điều khiển xe máy mà trong hơi thở có nồng độ cồn vượt quá 0,25 đến 0,4 mg/l"
+      hanh_vi: "Điều khiển xe máy mà trong máu/hơi thở có nồng độ cồn vượt 50–80 mg/100ml máu hoặc 0,25–0,4 mg/l khí thở"
       tien_phat_min: 6000000
       tien_phat_max: 8000000
       phat_bo_sung: { tru_diem: 10 }
       can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 8, diem: "b" }
-    giai_thich_mau: "Nồng độ cồn 0,25–0,4 mg/l → mức 2 (6–8 triệu, trừ 10 điểm)."
+    giai_thich_mau: "Nồng độ cồn mức 2 (6–8 triệu, trừ 10 điểm)."
 
   - id: R_CON_XEMAY_MUC3
     nhom: nong_do_con
     ap_dung_loai_xe: [xe_may]
     dieu_kien:
-      - "chiso.nongDoCon_khiTho > 0.4"
+      - any:
+          - "chiso.nongDoCon_khiTho > 0.4"
+          - "chiso.nongDoCon_mau > 80"
     ket_luan:
-      hanh_vi: "Điều khiển xe máy mà trong hơi thở có nồng độ cồn vượt quá 0,4 mg/l"
+      hanh_vi: "Điều khiển xe máy mà trong máu/hơi thở có nồng độ cồn vượt quá 80 mg/100ml máu hoặc 0,4 mg/l khí thở"
       tien_phat_min: 8000000
       tien_phat_max: 10000000
       phat_bo_sung: { tuoc_gplx_thang: [22, 24] }
       can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 9, diem: "d" }
-    giai_thich_mau: "Nồng độ cồn > 0,4 mg/l → mức cao nhất (8–10 triệu, tước GPLX 22–24 tháng)."
+    giai_thich_mau: "Nồng độ cồn mức cao nhất (8–10 triệu, tước GPLX 22–24 tháng)."
 
 meta_rules:
   - id: M_TANG_NANG_TAI_NAN

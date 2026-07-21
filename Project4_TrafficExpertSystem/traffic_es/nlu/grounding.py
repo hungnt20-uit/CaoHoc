@@ -5,6 +5,7 @@ from typing import Dict, List, Tuple
 _KNOWN_PREFIX = ("phuongtien.", "nguoi.", "chiso.", "boicanh.", "tinhtiet.")
 _RANGES = {
     "chiso.nongDoCon_khiTho": (0.0, 5.0),
+    "chiso.nongDoCon_mau": (0.0, 500.0),
     "chiso.tocDo": (0.0, 300.0),
     "chiso.tocDoGioiHan": (0.0, 150.0),
 }
