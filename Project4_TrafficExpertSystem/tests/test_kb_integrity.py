@@ -18,8 +18,22 @@ def test_every_rule_has_valid_penalty_and_cancu():
         assert r.ket_luan.can_cu.dieu > 0, r.id
 
 
+def _leaf_conditions(node):
+    """Trả về danh sách chuỗi điều kiện lá từ node str | {'any'|'all': [...]}."""
+    if isinstance(node, str):
+        return [node]
+    if isinstance(node, dict):
+        out = []
+        for key in ("any", "all"):
+            for child in node.get(key, []):
+                out.extend(_leaf_conditions(child))
+        return out
+    return []
+
+
 def test_conditions_reference_known_namespaces():
-    ok = ("phuongtien.", "nguoi.", "chiso.", "boicanh.", "tinhtiet.")
+    ok = ("phuongtien.", "nguoi.", "chiso.", "boicanh.", "tinhtiet.", "hanhvi.")
     for r in load_rules(RULES_DIR):
-        for cond in r.dieu_kien:
-            assert cond.startswith(ok), f"{r.id}: điều kiện lạ {cond!r}"
+        for node in r.dieu_kien:
+            for cond in _leaf_conditions(node):
+                assert cond.startswith(ok), f"{r.id}: điều kiện lạ {cond!r}"

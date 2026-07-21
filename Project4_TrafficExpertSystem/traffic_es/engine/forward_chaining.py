@@ -4,7 +4,7 @@ from typing import List, Optional
 
 from traffic_es.engine.working_memory import WorkingMemory
 from traffic_es.engine.trace import Trace
-from traffic_es.engine.conditions import eval_condition
+from traffic_es.engine.conditions import eval_condition, eval_cond_node
 from traffic_es.knowledge.rules import Rule, MetaRule
 
 
@@ -20,7 +20,7 @@ def deduce_rules(wm: WorkingMemory, rules: List[Rule], trace: Trace) -> List[Rul
     for r in rules:
         if not _vehicle_ok(r, wm):
             continue
-        if all(eval_condition(c, wm) for c in r.dieu_kien):
+        if all(eval_cond_node(c, wm) for c in r.dieu_kien):
             fired.append(r)
             cc = r.ket_luan.can_cu
             trace.add(
