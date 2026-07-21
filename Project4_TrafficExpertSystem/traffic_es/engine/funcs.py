@@ -41,11 +41,21 @@ def _vuot_toc_do_pct(wm: WorkingMemory) -> float:
     return round((wm.get("chiso.tocDo") - gh) / gh * 100, 2)
 
 
+def _vuot_toc_do_kmh(wm: WorkingMemory) -> float:
+    return wm.get("chiso.tocDo") - wm.get("chiso.tocDoGioiHan")
+
+
 DEFAULT_FUNCS: List[Func] = [
     Func(
         "vuot_toc_do_pct",
         ["chiso.tocDo", "chiso.tocDoGioiHan"],
         "chiso.vuot_toc_do_pct",
         _vuot_toc_do_pct,
+    ),
+    Func(
+        "vuot_toc_do_kmh",
+        ["chiso.tocDo", "chiso.tocDoGioiHan"],
+        "chiso.vuot_toc_do_kmh",
+        _vuot_toc_do_kmh,
     ),
 ]
