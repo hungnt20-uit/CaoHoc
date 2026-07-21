@@ -19,6 +19,7 @@ class KetQua:
     chi_tiet: List[DongPhat] = field(default_factory=list)
     tong_tien: int = 0
     tuoc_gplx_thang_max: Optional[int] = None
+    tru_diem_max: Optional[int] = None
 
 
 def _tien_cua(rule: Rule, pick: Optional[str]) -> int:
@@ -45,9 +46,17 @@ def aggregate(rules: List[Rule], pick: Optional[str] = None) -> KetQua:
     for r in rules:
         tien = _tien_cua(r, pick)
         tuoc = r.ket_luan.phat_bo_sung.tuoc_gplx_thang
-        bs = f"tước GPLX {tuoc[1]} tháng" if tuoc else "—"
+        tru_diem = r.ket_luan.phat_bo_sung.tru_diem
+        bs_parts = []
+        if tuoc:
+            bs_parts.append(f"tước GPLX {tuoc[1]} tháng")
+        if tru_diem:
+            bs_parts.append(f"trừ {tru_diem} điểm")
+        bs = " · ".join(bs_parts) if bs_parts else "—"
         res.chi_tiet.append(DongPhat(r.ket_luan.hanh_vi, tien, _can_cu_str(r), bs))
         res.tong_tien += tien
         if tuoc:
             res.tuoc_gplx_thang_max = max(res.tuoc_gplx_thang_max or 0, tuoc[1])
+        if tru_diem:
+            res.tru_diem_max = max(res.tru_diem_max or 0, tru_diem)
     return res

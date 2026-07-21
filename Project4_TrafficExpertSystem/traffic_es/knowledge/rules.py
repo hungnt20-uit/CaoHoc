@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 from pydantic import BaseModel, Field
 
@@ -30,7 +30,7 @@ class Rule(BaseModel):
     id: str
     nhom: str
     ap_dung_loai_xe: List[str] = Field(default_factory=list)
-    dieu_kien: List[str] = Field(default_factory=list)
+    dieu_kien: List[Union[str, Dict[str, Any]]] = Field(default_factory=list)
     ket_luan: KetLuan
     giai_thich_mau: Optional[str] = None
 

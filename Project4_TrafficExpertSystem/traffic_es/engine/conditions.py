@@ -49,3 +49,15 @@ def eval_condition(cond: str, wm: WorkingMemory) -> bool:
     except TypeError:
         return False
     raise ValueError(f"Toán tử không hỗ trợ: {op}")
+
+
+def eval_cond_node(node: object, wm: WorkingMemory) -> bool:
+    """Đánh giá node điều kiện: str | {'any':[...]} | {'all':[...]} (đệ quy)."""
+    if isinstance(node, str):
+        return eval_condition(node, wm)
+    if isinstance(node, dict):
+        if "any" in node:
+            return any(eval_cond_node(c, wm) for c in node["any"])
+        if "all" in node:
+            return all(eval_cond_node(c, wm) for c in node["all"])
+    raise ValueError(f"Node điều kiện không hợp lệ: {node!r}")
