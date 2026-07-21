@@ -1,0 +1,11 @@
+concepts:
+  - name: "xe ô tô"
+    content: "Phương tiện giao thông cơ giới đường bộ chở người/hàng có từ 4 bánh."
+    inner_rul: "Luật Trật tự, an toàn giao thông đường bộ 2024"
+    attrs: { loai: "o_to" }
+    keyphrases: ["ô tô", "oto", "xe hơi", "xe con", "xe ôtô"]
+  - name: "xe mô tô"
+    content: "Phương tiện cơ giới đường bộ hai hoặc ba bánh."
+    inner_rul: "Điều 3.39 QCVN 41:2016/BGTVT"
+    attrs: { loai: "xe_may" }
+    keyphrases: ["xe máy", "mô tô", "xe gắn máy", "xe mô tô"]
