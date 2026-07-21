@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import Dict, List, Tuple
 
-_KNOWN_PREFIX = ("phuongtien.", "nguoi.", "chiso.", "boicanh.", "tinhtiet.")
+_KNOWN_PREFIX = ("phuongtien.", "nguoi.", "chiso.", "boicanh.", "tinhtiet.", "hanhvi.")
 _RANGES = {
     "chiso.nongDoCon_khiTho": (0.0, 5.0),
     "chiso.nongDoCon_mau": (0.0, 500.0),
