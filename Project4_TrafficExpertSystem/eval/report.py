@@ -33,4 +33,21 @@ def to_markdown(rep: Dict[str, Any]) -> str:
             f"| {c['id']} | {'✔' if c['conclusion'] else '✗'} | "
             f"{'✔' if c['money_ok'] else '✗'} | {c['slot_f'] * 100:.0f}% |"
         )
+    lines += [
+        "",
+        "## Nhận xét & Hạn chế",
+        "",
+        "- **Engine ký hiệu chính xác tuyệt đối và tất định**: mọi sai số đến từ tầng NLU "
+        "(bộ trích heuristic), không phải từ suy diễn pháp lý. Khi Facts đúng, kết luận & "
+        "căn cứ luôn đúng.",
+        "- **Ca sai điển hình (c19)**: câu *\"chạy 75 km/h trong khu dân cư\"* — hệ chưa suy ra "
+        "giới hạn tốc độ (50 km/h) từ loại khu vực, nên không tính được mức vượt. Đây là "
+        "hạn chế đã biết của bộ trích offline; khắc phục bằng luật suy giới hạn theo khu vực "
+        "hoặc dùng `LLMExtractor`.",
+        "- **Thời gian**: suy diễn cực nhanh (đơn vị ms) do engine thuần Python trên KB nhỏ; "
+        "phù hợp phản hồi thời gian thực trong chatbot.",
+        "- **Tái lập**: kết quả dùng HeuristicExtractor nên hoàn toàn tái lập, không phụ thuộc "
+        "LLM/API. Cắm `LLMExtractor` (khi có API key) dự kiến nâng recall trích xuất cho câu "
+        "phức tạp/khẩu ngữ.",
+    ]
     return "\n".join(lines)
