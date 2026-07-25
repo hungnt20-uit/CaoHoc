@@ -28,7 +28,16 @@ def _parse(raw: str) -> dict:
         data = json.loads(s)
         return data if isinstance(data, dict) else {}
     except (json.JSONDecodeError, TypeError):
-        return {}
+        pass
+    # fallback: trích khối {...} đầu-cuối (khi LLM kèm chữ quanh JSON)
+    i, j = s.find("{"), s.rfind("}")
+    if 0 <= i < j:
+        try:
+            data = json.loads(s[i : j + 1])
+            return data if isinstance(data, dict) else {}
+        except (json.JSONDecodeError, TypeError):
+            return {}
+    return {}
 
 
 def _coerce(facts: Dict[str, object]) -> Dict[str, object]:

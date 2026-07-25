@@ -13,7 +13,7 @@ from traffic_es.nlu.pipeline import NLUPipeline
 from traffic_es.engine.reasoner import Reasoner
 from traffic_es.nlu.extractor import HeuristicExtractor
 from traffic_es.nlu.llm_extractor import LLMExtractor
-from traffic_es.llm.providers import make_default_llm
+from traffic_es.llm.providers import make_default_llm, default_mode_label
 
 RULES_DIR = Path(__file__).resolve().parent.parent / "traffic_es" / "knowledge" / "rules"
 
@@ -21,10 +21,8 @@ RULES_DIR = Path(__file__).resolve().parent.parent / "traffic_es" / "knowledge" 
 @st.cache_resource
 def build():
     llm = make_default_llm()
-    if llm is not None:
-        extractor, mode = LLMExtractor(llm), "LLM (OpenAI)"
-    else:
-        extractor, mode = HeuristicExtractor(), "Heuristic offline"
+    extractor = LLMExtractor(llm) if llm is not None else HeuristicExtractor()
+    mode = default_mode_label()
     svc = TrafficESService(Reasoner.from_rules_dir(RULES_DIR), NLUPipeline(extractor))
     return svc, mode
 
