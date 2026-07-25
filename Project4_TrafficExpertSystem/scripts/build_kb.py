@@ -16,27 +16,8 @@ from pathlib import Path
 from traffic_es.acquisition.doc_to_text import to_text
 from traffic_es.acquisition.build_kb import build_kb_from_text, write_rules_yaml
 from traffic_es.acquisition.segmenter import segment
-from traffic_es.llm.client import LLMClient, CachingLLM
-
-
-class OpenAILLM(LLMClient):
-    def __init__(self, model: str = "gpt-4o-mini"):
-        from openai import OpenAI  # import trễ để test không cần openai
-
-        self.client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
-        self.model = model
-
-    def complete(self, system: str, user: str, **kw) -> str:
-        r = self.client.chat.completions.create(
-            model=self.model,
-            temperature=0,
-            messages=[
-                {"role": "system", "content": system},
-                {"role": "user", "content": user},
-            ],
-            response_format={"type": "json_object"},
-        )
-        return r.choices[0].message.content or ""
+from traffic_es.llm.client import CachingLLM
+from traffic_es.llm.providers import OpenAILLM  # provider dùng chung (DRY)
 
 
 def main() -> None:

@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import os
 import sys
 from pathlib import Path
 
@@ -13,35 +12,35 @@ from traffic_es.service import TrafficESService
 from traffic_es.nlu.pipeline import NLUPipeline
 from traffic_es.engine.reasoner import Reasoner
 from traffic_es.nlu.extractor import HeuristicExtractor
+from traffic_es.nlu.llm_extractor import LLMExtractor
+from traffic_es.llm.providers import make_default_llm
 
 RULES_DIR = Path(__file__).resolve().parent.parent / "traffic_es" / "knowledge" / "rules"
 
 
 @st.cache_resource
-def get_service() -> TrafficESService:
-    extractor = HeuristicExtractor()
-    if os.environ.get("OPENAI_API_KEY"):
-        try:
-            from traffic_es.nlu.llm_extractor import LLMExtractor
-            from scripts.build_kb import OpenAILLM
-
-            extractor = LLMExtractor(OpenAILLM())
-        except Exception:
-            extractor = HeuristicExtractor()
-    return TrafficESService(Reasoner.from_rules_dir(RULES_DIR), NLUPipeline(extractor))
+def build():
+    llm = make_default_llm()
+    if llm is not None:
+        extractor, mode = LLMExtractor(llm), "LLM (OpenAI)"
+    else:
+        extractor, mode = HeuristicExtractor(), "Heuristic offline"
+    svc = TrafficESService(Reasoner.from_rules_dir(RULES_DIR), NLUPipeline(extractor))
+    return svc, mode
 
 
 st.set_page_config(page_title="Tư vấn xử phạt giao thông", page_icon="⚖️", layout="wide")
-st.title("⚖️ Hệ chuyên gia tư vấn xử phạt vi phạm giao thông")
+svc, mode = build()
+
+st.title("⚖️ Hệ thống chuyên gia tư vấn xử phạt vi phạm giao thông")
 st.caption(
     "Mô tả tình huống bằng tiếng Việt — hệ suy diễn ra mức phạt và căn cứ pháp lý "
-    "(Nghị định 168/2024). Chế độ hiện tại: "
-    + ("LLM" if os.environ.get("OPENAI_API_KEY") else "Heuristic offline")
+    "(Nghị định 168/2024)."
 )
+st.sidebar.markdown(f"**Chế độ trích xuất:** {mode}")
+st.sidebar.caption("Đặt biến môi trường `OPENAI_API_KEY` để bật chế độ LLM cho câu phức tạp/khẩu ngữ.")
 
-svc = get_service()
 col1, col2 = st.columns([1, 1])
-
 with col1:
     st.subheader("💬 Tình huống")
     text = st.text_area(
@@ -52,7 +51,11 @@ with col1:
     go = st.button("Phân tích", type="primary")
 
 if go and text.strip():
-    ans = svc.answer(text)
+    try:
+        ans = svc.answer(text)
+    except Exception as exc:  # LLM/mạng lỗi -> báo rõ, không crash
+        st.error(f"Lỗi khi phân tích (có thể do LLM/mạng): {exc}")
+        st.stop()
     with col1:
         st.markdown(ans.explanation)
     with col2:
@@ -62,5 +65,5 @@ if go and text.strip():
         with st.expander("Chuỗi suy diễn (trace)"):
             st.code(ans.trace.render() or "(không có bước)")
         with st.expander("Tình tiết suy luận / cảnh báo"):
-            st.write("Tình tiết suy luận:", ans.nlu_meta.get("inferred"))
+            st.write("Tình tiết:", ans.nlu_meta.get("inferred"))
             st.write("Cảnh báo:", ans.nlu_meta.get("warnings"))
