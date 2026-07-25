@@ -27,21 +27,26 @@ class HeuristicExtractor:
         t = text.lower()
         facts: Facts = {}
         ev: Dict[str, str] = {}
-        # loại xe
+        # loại xe — chọn loại được NHẮC SỚM NHẤT trong câu (đúng chủ thể),
+        # tránh nhầm khi câu nhắc nhiều loại (vd "xe máy đâm vào ô tô")
+        best = None  # (vị trí, loại, match)
         for loai, pats in _XE:
             for p in pats:
                 m = re.search(p, t)
-                if m:
-                    facts["phuongtien.loai"] = loai
-                    ev["phuongtien.loai"] = m.group(0)
-                    break
-            if "phuongtien.loai" in facts:
-                break
-        # nồng độ cồn (mg/l khí thở)
-        m = re.search(r"(?:nồng độ cồn|cồn)[^0-9]{0,20}(\d+(?:\.\d+)?)", t)
+                if m and (best is None or m.start() < best[0]):
+                    best = (m.start(), loai, m.group(0))
+        if best:
+            facts["phuongtien.loai"] = best[1]
+            ev["phuongtien.loai"] = best[2]
+        # nồng độ cồn — phân biệt máu (mg/100ml) vs khí thở (mg/l)
+        m = re.search(r"(?:nồng độ cồn|cồn)[^0-9]{0,25}(\d+(?:\.\d+)?)", t)
         if m:
-            facts["chiso.nongDoCon_khiTho"] = float(m.group(1))
-            ev["chiso.nongDoCon_khiTho"] = m.group(0)
+            val = float(m.group(1))
+            compact = t.replace(" ", "")
+            is_mau = ("máu" in t) or ("100ml" in compact) or ("mg/100" in compact)
+            key = "chiso.nongDoCon_mau" if is_mau else "chiso.nongDoCon_khiTho"
+            facts[key] = val
+            ev[key] = m.group(0)
         # tốc độ
         m = re.search(r"(?:chạy|tốc độ)[^0-9]{0,10}(\d+)\s*(?:km|km/h)", t)
         if m:
@@ -54,6 +59,15 @@ class HeuristicExtractor:
         if "khu dân cư" in t:
             facts["boicanh.khuVuc"] = "khu_dan_cu"
             ev["boicanh.khuVuc"] = "khu dân cư"
+        # hành vi/điều kiện dạng boolean
+        if re.search(r"không\s+(?:đội\s+)?mũ", t):
+            facts["nguoi.khong_mu_bao_hiem"] = True
+        if re.search(r"không\s+(?:thắt|cài)?\s*dây", t) or "không dây an toàn" in t:
+            facts["nguoi.khong_day_an_toan"] = True
+        if "vượt đèn đỏ" in t or "vượt đèn" in t or "không chấp hành" in t and "đèn" in t:
+            facts["hanhvi.vuot_den_do"] = True
+        if "không có giấy phép lái xe" in t or "không bằng lái" in t or "không có bằng" in t:
+            facts["nguoi.coGPLX"] = False
         # sự kiện thô cho Bài toán 1
         raw = [
             seg.strip()
