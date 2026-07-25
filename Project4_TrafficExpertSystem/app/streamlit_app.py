@@ -13,47 +13,97 @@ from traffic_es.nlu.pipeline import NLUPipeline
 from traffic_es.engine.reasoner import Reasoner
 from traffic_es.nlu.extractor import HeuristicExtractor
 from traffic_es.nlu.llm_extractor import LLMExtractor
-from traffic_es.llm.providers import make_default_llm, default_mode_label
+from traffic_es.llm.providers import (
+    make_default_llm,
+    default_mode_label,
+    OpenAILLM,
+    AnthropicLLM,
+)
 
 RULES_DIR = Path(__file__).resolve().parent.parent / "traffic_es" / "knowledge" / "rules"
 
+AUTO = "Tự động (theo .env)"
+CLAUDE = "Anthropic (Claude)"
+OPENAI = "OpenAI (GPT)"
+HEURISTIC = "Heuristic (offline)"
+
 
 @st.cache_resource
-def build():
-    llm = make_default_llm()
-    extractor = LLMExtractor(llm) if llm is not None else HeuristicExtractor()
-    mode = default_mode_label()
-    svc = TrafficESService(Reasoner.from_rules_dir(RULES_DIR), NLUPipeline(extractor))
-    return svc, mode
+def get_reasoner() -> Reasoner:
+    return Reasoner.from_rules_dir(RULES_DIR)
+
+
+def build_extractor(provider: str, api_key: str, model: str):
+    key = api_key.strip() or None
+    mdl = model.strip() or None
+    try:
+        if provider == CLAUDE:
+            return LLMExtractor(AnthropicLLM(model=mdl, api_key=key)), f"LLM · Anthropic · {mdl or 'claude-opus-4-8'}"
+        if provider == OPENAI:
+            return LLMExtractor(OpenAILLM(model=mdl, api_key=key)), f"LLM · OpenAI · {mdl or 'gpt-4o-mini'}"
+        if provider == HEURISTIC:
+            return HeuristicExtractor(), "Heuristic offline"
+        # AUTO — theo biến môi trường / .env
+        llm = make_default_llm()
+        if llm is not None:
+            return LLMExtractor(llm), default_mode_label()
+        return HeuristicExtractor(), "Heuristic offline"
+    except Exception as exc:  # thiếu key / lỗi khởi tạo → fallback êm
+        st.sidebar.error(f"Không khởi tạo được LLM ({exc}). Đang dùng Heuristic.")
+        return HeuristicExtractor(), "Heuristic offline (fallback)"
 
 
 st.set_page_config(page_title="Tư vấn xử phạt giao thông", page_icon="⚖️", layout="wide")
-svc, mode = build()
 
+# ---- Sidebar cấu hình ----
+st.sidebar.header("⚙️ Cấu hình bộ trích xuất")
+provider = st.sidebar.selectbox(
+    "Bộ trích xuất (NLU)", [AUTO, CLAUDE, OPENAI, HEURISTIC], index=0
+)
+api_key = ""
+model = ""
+if provider in (CLAUDE, OPENAI):
+    api_key = st.sidebar.text_input(
+        "API key", type="password",
+        help="Chỉ lưu trong phiên chạy này, không ghi ra file, không gửi lên chat.",
+    )
+    ph = "claude-haiku-4-5 (rẻ) / claude-opus-4-8" if provider == CLAUDE else "gpt-4o-mini"
+    model = st.sidebar.text_input("Model (tùy chọn)", placeholder=ph)
+
+extractor, mode = build_extractor(provider, api_key, model)
+svc = TrafficESService(get_reasoner(), NLUPipeline(extractor))
+
+st.sidebar.markdown(f"**Chế độ hiện tại:** {mode}")
+st.sidebar.caption(
+    "LLM hiểu câu phức tạp/khẩu ngữ tốt hơn; Heuristic chạy offline, miễn phí. "
+    "Có thể đặt key trong `.env` để dùng chế độ Tự động."
+)
+
+# ---- Nội dung chính ----
 st.title("⚖️ Hệ thống chuyên gia tư vấn xử phạt vi phạm giao thông")
 st.caption(
     "Mô tả tình huống bằng tiếng Việt — hệ suy diễn ra mức phạt và căn cứ pháp lý "
     "(Nghị định 168/2024)."
 )
-st.sidebar.markdown(f"**Chế độ trích xuất:** {mode}")
-st.sidebar.caption("Đặt biến môi trường `OPENAI_API_KEY` để bật chế độ LLM cho câu phức tạp/khẩu ngữ.")
 
 col1, col2 = st.columns([1, 1])
 with col1:
     st.subheader("💬 Tình huống")
     text = st.text_area(
         "Nhập mô tả hiện trường:",
-        "Tôi lái ô tô, thổi nồng độ cồn 0.42 mg/l, rồi đâm vào một xe máy.",
+        "Tối qua nhậu xong tôi vẫn cầm lái con xe hơi về nhà, bị thổi ra 0,45 mg/l khí thở, "
+        "lại còn quẹt trúng một xe máy.",
         height=140,
     )
     go = st.button("Phân tích", type="primary")
 
 if go and text.strip():
-    try:
-        ans = svc.answer(text)
-    except Exception as exc:  # LLM/mạng lỗi -> báo rõ, không crash
-        st.error(f"Lỗi khi phân tích (có thể do LLM/mạng): {exc}")
-        st.stop()
+    with st.spinner("Đang phân tích…"):
+        try:
+            ans = svc.answer(text)
+        except Exception as exc:  # LLM/mạng lỗi -> báo rõ, không crash
+            st.error(f"Lỗi khi phân tích (có thể do LLM/mạng/hết quota): {exc}")
+            st.stop()
     with col1:
         st.markdown(ans.explanation)
     with col2:
