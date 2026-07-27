@@ -108,8 +108,27 @@ if go and text.strip():
         st.markdown(ans.explanation)
     with col2:
         st.subheader("🔎 Hộp kính suy diễn")
+        if ans.sample_problem is not None:
+            p = ans.sample_problem
+            with st.expander(f"🧩 Mẫu bài toán: {p.name}", expanded=True):
+                st.write("**Mục tiêu (Goal):**", p.goal)
+                st.write("**Lời giải mẫu (Sol):**")
+                st.markdown("\n".join(f"{i+1}. {s}" for i, s in enumerate(p.sol)))
         with st.expander("Facts đã trích", expanded=True):
             st.json(ans.facts)
+        with st.expander("🕸️ Legal-Onto: concept khớp (question-graph)"):
+            mc = ans.nlu_meta.get("matched_concepts") or []
+            if mc:
+                for m in mc:
+                    st.write(
+                        f"- **{m['concept']}** (điểm {m['score']}) "
+                        f"— khớp: {', '.join(m['keyphrases'])}"
+                    )
+                added = ans.nlu_meta.get("kg_facts_added") or []
+                if added:
+                    st.caption("Facts được KG bổ sung: " + ", ".join(added))
+            else:
+                st.write("(không có concept nào khớp)")
         with st.expander("Chuỗi suy diễn (trace)"):
             st.code(ans.trace.render() or "(không có bước)")
         with st.expander("Tình tiết suy luận / cảnh báo"):
