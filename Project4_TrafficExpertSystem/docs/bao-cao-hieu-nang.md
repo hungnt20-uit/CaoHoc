@@ -9,8 +9,8 @@
 | Độ chính xác **Mức phạt** (đúng tổng tiền) | 94.7% |
 | **F1 trích xuất Facts** (slot) | 99.2% |
 | Precision / Recall trích xuất | 100.0% / 98.7% |
-| Thời gian NLU trung bình | 0.06 ms |
-| Thời gian engine trung bình | 0.056 ms |
+| Thời gian NLU trung bình | 0.07 ms |
+| Thời gian engine trung bình | 0.145 ms |
 
 ## Chi tiết theo ca
 

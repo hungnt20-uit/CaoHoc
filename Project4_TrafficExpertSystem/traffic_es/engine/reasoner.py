@@ -6,7 +6,8 @@ from typing import Any, Dict, List, Optional
 
 from traffic_es.engine.working_memory import WorkingMemory
 from traffic_es.engine.trace import Trace
-from traffic_es.engine.funcs import Func, DEFAULT_FUNCS, apply_funcs
+from traffic_es.engine.funcs import Func, DEFAULT_FUNCS
+from traffic_es.engine.deduction_network import solve_and_apply
 from traffic_es.engine.forward_chaining import deduce_rules, apply_meta
 from traffic_es.engine.penalty import aggregate, KetQua
 from traffic_es.knowledge.rules import Rule, MetaRule
@@ -39,7 +40,7 @@ class Reasoner:
     def infer(self, facts: Dict[str, Any]) -> InferResult:
         wm = WorkingMemory(facts)
         trace = Trace()
-        apply_funcs(wm, self.funcs, trace)  # Deduce_Objects
+        solve_and_apply(wm, self.funcs, self.rules, trace)  # Deduce_Objects (A*/(M,R))
         fired = deduce_rules(wm, self.rules, trace)  # Deduce_Rules
         pick = apply_meta(wm, self.meta_rules, trace)  # Meta-rule
         ket_qua = aggregate(fired, pick)  # Gộp phạt

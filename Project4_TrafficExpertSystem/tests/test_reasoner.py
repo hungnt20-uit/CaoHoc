@@ -23,6 +23,20 @@ def test_end_to_end_con_oto():
     assert any(s.kind == "META" for s in res.trace.steps)
 
 
+def test_speed_uses_astar_network():
+    reasoner = Reasoner.from_rules_dir(RULES_DIR)
+    facts = {
+        "phuongtien.loai": "o_to",
+        "chiso.tocDo": 80.0,
+        "chiso.tocDoGioiHan": 50.0,
+    }
+    res = reasoner.infer(facts)
+    astar = [s for s in res.trace.steps if s.kind == "ASTAR"]
+    assert astar, "phải có bước suy diễn bằng mạng tính toán (A*)"
+    assert "vuot_toc_do_kmh" in astar[0].data["solution"]
+    assert res.ket_qua.tong_tien > 0
+
+
 def test_no_violation_returns_empty():
     reasoner = Reasoner.from_rules_dir(RULES_DIR)
     res = reasoner.infer({"phuongtien.loai": "o_to", "chiso.nongDoCon_khiTho": 0.0})
