@@ -51,6 +51,37 @@ def eval_condition(cond: str, wm: WorkingMemory) -> bool:
     raise ValueError(f"Toán tử không hỗ trợ: {op}")
 
 
+def _keys_in_leaf(cond: str) -> set:
+    """Các toán hạng dạng key (namespace.attr), bỏ literal số/chuỗi/bool."""
+    op = next((o for o in _OPS if o in cond), None)
+    parts = [cond] if op is None else cond.split(op, 1)
+    keys = set()
+    for tok in parts:
+        t = tok.strip()
+        if not t or t.startswith('"') or t.lower() in ("true", "false"):
+            continue
+        try:
+            float(t)
+            continue
+        except ValueError:
+            pass
+        keys.add(t)
+    return keys
+
+
+def referenced_keys(node: object) -> set:
+    """Tập khóa thuộc tính được tham chiếu trong node điều kiện (đệ quy)."""
+    if isinstance(node, str):
+        return _keys_in_leaf(node)
+    if isinstance(node, dict):
+        out: set = set()
+        for k in ("any", "all"):
+            for child in node.get(k, []):
+                out |= referenced_keys(child)
+        return out
+    return set()
+
+
 def eval_cond_node(node: object, wm: WorkingMemory) -> bool:
     """Đánh giá node điều kiện: str | {'any':[...]} | {'all':[...]} (đệ quy)."""
     if isinstance(node, str):
