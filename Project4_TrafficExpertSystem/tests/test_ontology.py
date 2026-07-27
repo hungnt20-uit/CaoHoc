@@ -18,4 +18,6 @@ def test_concept_fields():
 def test_store_lookup_by_keyphrase():
     store = ConceptStore.from_yaml(Path("traffic_es/knowledge/concepts.yaml"))
     c = store.find_by_keyphrase("xe gắn máy")
-    assert c is not None and c.attrs.get("loai") == "xe_may"
+    assert c is not None
+    assert c.attrs.get("fact") == "phuongtien.loai"
+    assert c.attrs.get("value") == "xe_may"

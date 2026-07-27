@@ -1,11 +1,58 @@
 concepts:
+  # ── Phương tiện ────────────────────────────────────────────────
   - name: "xe ô tô"
     content: "Phương tiện giao thông cơ giới đường bộ chở người/hàng có từ 4 bánh."
     inner_rul: "Luật Trật tự, an toàn giao thông đường bộ 2024"
-    attrs: { loai: "o_to" }
-    keyphrases: ["ô tô", "oto", "xe hơi", "xe con", "xe ôtô"]
+    attrs: { nhom: "phuong_tien", fact: "phuongtien.loai", value: "o_to" }
+    keyphrases: ["ô tô", "oto", "xe hơi", "xe con", "xe ôtô", "xe tải", "xe khách"]
   - name: "xe mô tô"
     content: "Phương tiện cơ giới đường bộ hai hoặc ba bánh."
     inner_rul: "Điều 3.39 QCVN 41:2016/BGTVT"
-    attrs: { loai: "xe_may" }
-    keyphrases: ["xe máy", "mô tô", "xe gắn máy", "xe mô tô"]
+    attrs: { nhom: "phuong_tien", fact: "phuongtien.loai", value: "xe_may" }
+    keyphrases: ["xe máy", "mô tô", "xe gắn máy", "xe mô tô", "xe máy điện"]
+
+  # ── Chỉ số đo lường (là chủ đề bài toán, không phải boolean) ─────
+  - name: "nồng độ cồn"
+    content: "Hàm lượng cồn trong khí thở (mg/L) hoặc trong máu (mg/100ml)."
+    inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "nong_do_con" }
+    keyphrases: ["nồng độ cồn", "cồn", "rượu", "bia", "say", "thổi nồng độ", "khí thở", "trong máu"]
+  - name: "tốc độ"
+    content: "Vận tốc điều khiển phương tiện so với tốc độ tối đa cho phép."
+    inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "toc_do" }
+    keyphrases: ["tốc độ", "chạy quá tốc độ", "vượt tốc độ", "km/h", "kmh", "phóng nhanh", "quá tốc độ"]
+
+  # ── Hành vi (ánh xạ trực tiếp sang fact boolean) ────────────────
+  - name: "không đội mũ bảo hiểm"
+    content: "Người điều khiển/ngồi trên xe máy không đội mũ bảo hiểm đúng quy cách."
+    inner_rul: "Điều 7 khoản 2 điểm h Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "mu_bao_hiem", fact: "nguoi.khong_mu_bao_hiem", value: "true" }
+    keyphrases: ["không đội mũ", "không mũ bảo hiểm", "không mũ", "quên mũ bảo hiểm", "không nón bảo hiểm"]
+  - name: "không thắt dây an toàn"
+    content: "Người điều khiển ô tô không thắt dây đai an toàn khi xe chạy."
+    inner_rul: "Điều 6 khoản 3 điểm k Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "day_an_toan", fact: "nguoi.khong_day_an_toan", value: "true" }
+    keyphrases: ["không thắt dây", "không dây an toàn", "không cài dây", "quên thắt dây"]
+  - name: "vượt đèn đỏ"
+    content: "Không chấp hành hiệu lệnh của đèn tín hiệu giao thông."
+    inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "tin_hieu", fact: "hanhvi.vuot_den_do", value: "true" }
+    keyphrases: ["vượt đèn đỏ", "vượt đèn", "không chấp hành đèn tín hiệu", "đèn đỏ", "phóng qua đèn đỏ"]
+  - name: "không có giấy phép lái xe"
+    content: "Điều khiển phương tiện mà không có giấy phép lái xe hợp lệ."
+    inner_rul: "Điều 18 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "giay_to", fact: "nguoi.coGPLX", value: "false" }
+    keyphrases: ["không có giấy phép lái xe", "không bằng lái", "không gplx", "chưa có bằng lái", "không có bằng"]
+
+  # ── Tình tiết tăng nặng ─────────────────────────────────────────
+  - name: "gây tai nạn"
+    content: "Hành vi vi phạm gây ra tai nạn giao thông (tình tiết tăng nặng)."
+    inner_rul: "Meta-rule tăng nặng"
+    attrs: { nhom: "tinh_tiet", fact: "tinhtiet.gay_tai_nan", value: "true" }
+    keyphrases: ["gây tai nạn", "tai nạn", "đâm", "va chạm", "tông", "quẹt", "gây thương tích"]
+  - name: "tái phạm"
+    content: "Vi phạm lại hành vi cùng loại (tình tiết tăng nặng)."
+    inner_rul: "Meta-rule tăng nặng"
+    attrs: { nhom: "tinh_tiet", fact: "tinhtiet.tai_pham", value: "true" }
+    keyphrases: ["tái phạm", "vi phạm nhiều lần", "lần thứ hai", "tái diễn"]
