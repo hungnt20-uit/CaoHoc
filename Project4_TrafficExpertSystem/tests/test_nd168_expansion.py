@@ -72,3 +72,48 @@ def test_engine_fires_csgt_and_matuy():
     res2 = r.infer({"phuongtien.loai": "xe_may", "nguoi.co_chat_ma_tuy": True})
     fired2 = [s.data.get("rule_id") for s in res2.trace.steps if s.kind == "RULE"]
     assert fired2 == ["R_MATUY_XEMAY"]
+
+
+def test_sai_lan_dung_do_amounts_match_nd168_docx():
+    """Đối chiếu mức phạt với 168_2024_ND-CP (Điều 6/7/9)."""
+    svc = TrafficESService(Reasoner.from_rules_dir(RULES_DIR), NLUPipeline())
+    cases = [
+        ("Ô tô đi không đúng làn đường quy định", "R_SAI_LAN_OTO", 5_000_000),
+        ("Xe máy lấn làn", "R_SAI_LAN_XEMAY", 700_000),
+        ("Ô tô đậu nơi cấm đỗ", "R_DUNG_DO_SAI_OTO", 900_000),
+        ("Xe máy đỗ nơi cấm", "R_DUNG_DO_SAI_XEMAY", 500_000),
+        ("Xe máy chạy 65 km/h trong khu dân cư", "R_TOCDO_XEMAY_M2", 900_000),
+        ("Xe đạp đi sai phần đường", "R_SAI_LAN_XEDAP", 150_000),
+    ]
+    for text, rid, money in cases:
+        ans = svc.answer(text)
+        fired = [s.data.get("rule_id") for s in ans.trace.steps if s.kind == "RULE"]
+        assert rid in fired, (text, fired)
+        assert ans.ket_qua.tong_tien == money, (text, ans.ket_qua.tong_tien)
+
+
+def test_clarify_offers_sai_lan_and_dung_do():
+    from traffic_es.nlu.clarify import BEHAVIOR_SPECS
+
+    assert "sai_lan" in BEHAVIOR_SPECS
+    assert "dung_do_sai" in BEHAVIOR_SPECS
+
+
+def test_cam_dien_thoai_and_tai_nghe():
+    svc = TrafficESService(Reasoner.from_rules_dir(RULES_DIR), NLUPipeline())
+    ans = svc.answer("Tôi chạy xe máy cầm điện thoại")
+    fired = [s.data.get("rule_id") for s in ans.trace.steps if s.kind == "RULE"]
+    assert "R_CAM_DIEN_THOAI_XEMAY" in fired
+    assert ans.ket_qua.tong_tien == 900_000
+    assert ans.ket_qua.tru_diem_max == 4
+    assert "trừ 4 điểm" in ans.ket_qua.chi_tiet[0].phat_bo_sung
+
+    ans2 = svc.answer("Tôi chạy xe máy đeo tai nghe")
+    fired2 = [s.data.get("rule_id") for s in ans2.trace.steps if s.kind == "RULE"]
+    assert "R_CAM_DIEN_THOAI_XEMAY" in fired2
+    assert ans2.ket_qua.tong_tien == 900_000
+
+    ans3 = svc.answer("Ô tô dùng tay cầm điện thoại khi lái")
+    fired3 = [s.data.get("rule_id") for s in ans3.trace.steps if s.kind == "RULE"]
+    assert "R_CAM_DIEN_THOAI_OTO" in fired3
+    assert ans3.ket_qua.tong_tien == 5_000_000

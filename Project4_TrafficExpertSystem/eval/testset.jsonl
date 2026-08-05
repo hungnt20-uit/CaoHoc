@@ -26,4 +26,11 @@
 {"id":"c25","text":"Xe khách nhồi nhét hành khách","expected":{"facts":{"phuongtien.loai":"o_to","hanhvi.cho_qua_so_nguoi":true},"rule_ids":["R_CHO_QUA_SO_NGUOI"],"tong_tien":5000000}}
 {"id":"c26","text":"Người đi bộ vượt dải phân cách","expected":{"facts":{"hanhvi.vuot_dai_phan_cach":true},"rule_ids":["R_NGB_SAI_PHAN_DUONG"],"tong_tien":300000}}
 {"id":"c27","text":"Chủ xe giao xe cho người không bằng lái","expected":{"facts":{"hanhvi.giao_xe_nguoi_khong_du_dk":true},"rule_ids":["R_GIAO_XE_KHONG_DU_DK"],"tong_tien":5000000}}
-{"id":"c28","text":"Xe đạp đi sai phần đường","expected":{"facts":{"phuongtien.loai":"xe_dap","hanhvi.sai_phan_duong":true},"rule_ids":["R_SAI_LAN_XEDAP"],"tong_tien":300000}}
+{"id":"c28","text":"Xe đạp đi sai phần đường","expected":{"facts":{"phuongtien.loai":"xe_dap","hanhvi.sai_phan_duong":true},"rule_ids":["R_SAI_LAN_XEDAP"],"tong_tien":150000}}
+{"id":"c29","text":"Ô tô đi không đúng làn đường quy định","expected":{"facts":{"phuongtien.loai":"o_to","hanhvi.sai_lan":true},"rule_ids":["R_SAI_LAN_OTO"],"tong_tien":5000000}}
+{"id":"c30","text":"Xe máy lấn làn","expected":{"facts":{"phuongtien.loai":"xe_may","hanhvi.sai_lan":true},"rule_ids":["R_SAI_LAN_XEMAY"],"tong_tien":700000}}
+{"id":"c31","text":"Ô tô đậu nơi cấm đỗ","expected":{"facts":{"phuongtien.loai":"o_to","hanhvi.dung_do_sai":true},"rule_ids":["R_DUNG_DO_SAI_OTO"],"tong_tien":900000}}
+{"id":"c32","text":"Xe máy chạy 65 km/h trong khu dân cư","expected":{"facts":{"phuongtien.loai":"xe_may","chiso.tocDo":65,"boicanh.khuVuc":"khu_dan_cu"},"rule_ids":["R_TOCDO_XEMAY_M2"],"tong_tien":900000}}
+{"id":"c33","text":"Tôi chạy xe máy cầm điện thoại","expected":{"facts":{"phuongtien.loai":"xe_may","hanhvi.cam_dien_thoai":true},"rule_ids":["R_CAM_DIEN_THOAI_XEMAY"],"tong_tien":900000}}
+{"id":"c34","text":"Ô tô dùng tay cầm điện thoại khi lái","expected":{"facts":{"phuongtien.loai":"o_to","hanhvi.cam_dien_thoai":true},"rule_ids":["R_CAM_DIEN_THOAI_OTO"],"tong_tien":5000000}}
+{"id":"c35","text":"Tôi chạy xe máy đeo tai nghe","expected":{"facts":{"phuongtien.loai":"xe_may","hanhvi.su_dung_thiet_bi_am_thanh":true},"rule_ids":["R_CAM_DIEN_THOAI_XEMAY"],"tong_tien":900000}}

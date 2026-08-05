@@ -5,6 +5,7 @@
 vehicle_choices:
   o_to: "Ô tô"
   xe_may: "Xe máy"
+  xe_dap: "Xe đạp / xe thô sơ"
 
 prompts:
   vehicle: "Bạn đang điều khiển loại phương tiện nào? (Mức phạt theo Nghị định 168 khác nhau giữa ô tô và xe máy.)"
@@ -16,6 +17,18 @@ behaviors:
   vuot_den_do:
     label: "Vượt đèn đỏ"
     facts: { hanhvi.vuot_den_do: true }
+  sai_lan:
+    label: "Đi sai làn / không đúng phần đường"
+    facts: { hanhvi.sai_lan: true }
+  dung_do_sai:
+    label: "Dừng / đỗ sai nơi quy định (nơi cấm)"
+    facts: { hanhvi.dung_do_sai: true }
+  cam_dien_thoai:
+    label: "Cầm / sử dụng điện thoại khi lái"
+    facts: { hanhvi.cam_dien_thoai: true }
+  deo_tai_nghe:
+    label: "Đeo tai nghe khi chạy xe máy"
+    facts: { hanhvi.su_dung_thiet_bi_am_thanh: true, phuongtien.loai: xe_may }
   khong_mu:
     label: "Không đội mũ bảo hiểm (xe máy)"
     facts: { nguoi.khong_mu_bao_hiem: true, phuongtien.loai: xe_may }

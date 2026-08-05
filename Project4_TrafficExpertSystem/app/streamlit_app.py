@@ -30,6 +30,7 @@ from traffic_es.llm.providers import (
 )
 from traffic_es.knowledge.ontology import ConceptStore
 from traffic_es.knowledge.knowledge_graph import KnowledgeGraph
+from traffic_es.knowledge.sample_problems import match_problems
 from traffic_es.viz.graph_data import build_legal_onto_graph, build_reasoning_graph
 from traffic_es.viz.pyvis_render import try_render_html
 
@@ -44,19 +45,29 @@ LOCAL = "Local / Colab (Qwen…)"
 HEURISTIC = "Heuristic (offline)"
 
 
+def _kb_fingerprint() -> str:
+    """Đổi khi sửa YAML → invalidate cache Streamlit (tránh UI chạy rule cũ)."""
+    parts: list[str] = []
+    for path in sorted(RULES_DIR.glob("*.yaml")):
+        parts.append(f"{path.name}:{path.stat().st_mtime_ns}")
+    if CONCEPTS_PATH.exists():
+        parts.append(f"concepts:{CONCEPTS_PATH.stat().st_mtime_ns}")
+    return "|".join(parts)
+
+
 @st.cache_resource
-def get_reasoner() -> Reasoner:
+def get_reasoner(_fp: str) -> Reasoner:
     return Reasoner.from_rules_dir(RULES_DIR)
 
 
 @st.cache_resource
-def get_concept_store() -> ConceptStore:
+def get_concept_store(_fp: str) -> ConceptStore:
     return ConceptStore.from_yaml(CONCEPTS_PATH)
 
 
 @st.cache_resource
-def get_kg() -> KnowledgeGraph:
-    return KnowledgeGraph.from_store(get_concept_store())
+def get_kg(_fp: str) -> KnowledgeGraph:
+    return KnowledgeGraph.from_store(get_concept_store(_fp))
 
 
 def show_graph(graph, *, height: int = 560) -> None:
@@ -154,8 +165,9 @@ elif provider == LOCAL:
             ok, msg = False, str(exc)
         (st.sidebar.success if ok else st.sidebar.error)(msg)
 
+_fp = _kb_fingerprint()
 extractor, inferrer, mode = build_extractor(provider, api_key, model, base_url)
-svc = TrafficESService(get_reasoner(), NLUPipeline(extractor, inferrer=inferrer))
+svc = TrafficESService(get_reasoner(_fp), NLUPipeline(extractor, inferrer=inferrer))
 
 st.sidebar.markdown(f"**Chế độ hiện tại:** {mode}")
 
@@ -178,7 +190,7 @@ with tab_kg:
     )
     ans_for_kg = st.session_state.get("answer")
     matched = (ans_for_kg.nlu_meta.get("matched_concepts") if ans_for_kg else None) or []
-    onto_graph = build_legal_onto_graph(get_concept_store(), get_kg(), matched)
+    onto_graph = build_legal_onto_graph(get_concept_store(_fp), get_kg(_fp), matched)
     show_graph(onto_graph, height=620)
     with st.expander("Chú giải màu / quan hệ"):
         st.markdown(
@@ -241,36 +253,92 @@ with tab_tu_van:
             st.markdown(ans.explanation)
         with col2:
             st.subheader("🔎 Chi tiết phân tích")
-            if ans.sample_problem is not None:
-                p = ans.sample_problem
-                with st.expander(f"🧩 Mẫu bài toán: {p.name}", expanded=True):
-                    st.write("**Mục tiêu (Goal):**", p.goal)
-                    st.write("**Lời giải mẫu (Sol):**")
-                    st.markdown("\n".join(f"{i+1}. {s}" for i, s in enumerate(p.sol)))
-            with st.expander("Facts đã trích", expanded=True):
-                st.json(ans.facts)
-            with st.expander("🕸️ Legal-Onto: concept khớp (question-graph)"):
-                mc = ans.nlu_meta.get("matched_concepts") or []
+
+            # Tóm tắt những gì đã nhận từ câu hỏi (trước cả khi đủ loại xe)
+            mc = ans.nlu_meta.get("matched_concepts") or []
+            behavior_facts = {
+                k: v
+                for k, v in (ans.facts or {}).items()
+                if k.startswith(("hanhvi.", "nguoi.", "phuongtien."))
+                and k != "phuongtien.loai"
+                and v not in (None, False, "", 0)
+            }
+            with st.expander("📌 Đã nhận từ câu hỏi", expanded=True):
                 if mc:
+                    st.markdown("**Concept khớp:**")
                     for m in mc:
                         st.write(
                             f"- **{m['concept']}** (điểm {m['score']}) "
                             f"— khớp: {', '.join(m['keyphrases'])}"
                         )
-                    added = ans.nlu_meta.get("kg_facts_added") or []
-                    if added:
-                        st.caption("Facts được KG bổ sung: " + ", ".join(added))
                 else:
-                    st.write("(không có concept nào khớp)")
+                    st.caption("Chưa khớp concept nào từ Legal-Onto.")
+                if behavior_facts:
+                    st.markdown("**Facts hành vi đã trích:**")
+                    for k, v in sorted(behavior_facts.items()):
+                        st.write(f"- `{k}` = `{v}`")
+                elif not mc:
+                    st.caption("Chưa trích được hành vi cụ thể.")
+                added = ans.nlu_meta.get("kg_facts_added") or []
+                if added:
+                    st.caption("Facts được KG bổ sung: " + ", ".join(added))
+
+            problems = match_problems(ans.facts or {})
+            if problems:
+                with st.expander(
+                    f"🧩 Mẫu bài toán khớp ({len(problems)})",
+                    expanded=True,
+                ):
+                    for p in problems:
+                        st.markdown(f"**{p.name}**")
+                        st.write("Mục tiêu (Goal):", p.goal)
+                        st.markdown(
+                            "Lời giải mẫu (Sol):\n"
+                            + "\n".join(f"{i+1}. {s}" for i, s in enumerate(p.sol))
+                        )
+                        st.divider()
+            else:
+                with st.expander("🧩 Mẫu bài toán", expanded=False):
+                    st.caption(
+                        "Chưa gắn được mẫu — cần ít nhất một hành vi/chỉ số "
+                        "thuộc nhóm luật (đèn đỏ, sai làn, cồn, tốc độ, …)."
+                    )
+
+            with st.expander("Facts đã trích (đầy đủ)", expanded=False):
+                st.json(ans.facts)
             with st.expander("Chuỗi suy diễn (trace)"):
-                st.code(ans.trace.render() or "(không có bước)")
-            with st.expander("Tình tiết suy luận / cảnh báo"):
-                st.write("Tình tiết:", ans.nlu_meta.get("inferred"))
-                neg = ans.nlu_meta.get("negated_keyphrases") or []
+                st.code(ans.trace.render() or "(không có bước — thường vì còn thiếu loại xe)")
+
+            inferred = ans.nlu_meta.get("inferred") or []
+            warns = ans.nlu_meta.get("warnings") or []
+            neg = ans.nlu_meta.get("negated_keyphrases") or []
+            with st.expander(
+                "Tình tiết suy luận / cảnh báo",
+                expanded=bool(warns or inferred or neg),
+            ):
+                if inferred:
+                    st.markdown("**Tình tiết suy ra (inferred):**")
+                    for item in inferred:
+                        if isinstance(item, dict):
+                            st.write(
+                                f"- `{item.get('fact', item)}` "
+                                f"(từ {item.get('source', '?')})"
+                            )
+                        else:
+                            st.write(f"- {item}")
+                else:
+                    st.caption(
+                        "Chưa có tình tiết suy luận thêm "
+                        "(inferred chỉ xuất hiện khi Func/KG suy ra fact mới, "
+                        "vd. giới hạn tốc độ theo khu vực)."
+                    )
                 if neg:
                     st.caption("Cụm bị bỏ vì ở thể phủ định: " + ", ".join(neg))
-                for w in ans.nlu_meta.get("warnings") or []:
-                    st.warning(w)
+                if warns:
+                    for w in warns:
+                        st.warning(w)
+                else:
+                    st.caption("Không có cảnh báo.")
 
         st.divider()
         st.subheader("🕸️ Nodes graph — chuỗi suy diễn tình huống")
@@ -283,6 +351,6 @@ with tab_tu_van:
             ans.trace,
             ans.nlu_meta,
             ket_qua_chi_tiet=ans.ket_qua.chi_tiet,
-            store=get_concept_store(),
+            store=get_concept_store(_fp),
         )
         show_graph(reason_graph, height=520)

@@ -6,6 +6,9 @@ Mỗi mẫu mô tả một *dạng* bài toán suy luận pháp lý:
   - Sol  : lời giải mẫu (chuỗi bước suy diễn chuẩn cho dạng đó).
 Khi một tình huống (facts) khớp Mp, hệ biết ngay khung lời giải áp dụng —
 đây là tri thức "bài toán mẫu" mà engine dùng để định hướng suy diễn.
+
+Một câu hỏi có thể khớp *nhiều* mẫu (đa lỗi). UI nên hiển thị tất cả
+`match_problems(facts)`, không chỉ `best_problem`.
 """
 
 from __future__ import annotations
@@ -26,10 +29,44 @@ class SampleProblem:
         keys = set(facts.keys())
         if not self.mp <= keys:
             return False
+        if not self.mp_any:
+            return bool(self.mp)  # chỉ khớp khi có Mp cụ thể
         return all(bool(group & keys) for group in self.mp_any)
 
     def specificity(self) -> int:
-        return len(self.mp) + len(self.mp_any)
+        return len(self.mp) + sum(len(g) for g in self.mp_any)
+
+
+# Nhóm hành vi theo file luật — dùng cho mp_any để không khớp “mọi câu có loại xe”.
+_AN_TOAN = {
+    "hanhvi.vuot_den_do",
+    "hanhvi.vuot_den_vang",
+    "hanhvi.khong_chap_hanh_csgt",
+    "hanhvi.cam_dien_thoai",
+    "hanhvi.su_dung_thiet_bi_am_thanh",
+    "nguoi.khong_mu_bao_hiem",
+    "nguoi.khong_day_an_toan",
+}
+_LAN_DUONG = {
+    "hanhvi.sai_lan",
+    "hanhvi.di_nguoc_chieu",
+    "hanhvi.quay_dau_cam",
+    "hanhvi.dung_do_sai_quy_dinh",
+}
+_GIAY_TO = {
+    "nguoi.khong_gplx",
+    "nguoi.gplx_het_han",
+    "nguoi.sai_hang_gplx",
+    "phuongtien.khong_dang_ky",
+    "phuongtien.khong_bao_hiem",
+    "phuongtien.khong_dang_kiem",
+}
+_CHU_XE = {
+    "hanhvi.thay_doi_may_khung",
+    "hanhvi.thay_doi_bien_so",
+    "hanhvi.xe_qua_han_su_dung",
+}
+_NONG_DO = {"chiso.nongDoCon_khiTho", "chiso.nongDoCon_mau", "clarify.pending_nong_do_con"}
 
 
 SAMPLE_PROBLEMS: List[SampleProblem] = [
@@ -58,7 +95,7 @@ SAMPLE_PROBLEMS: List[SampleProblem] = [
     SampleProblem(
         name="Nồng độ cồn",
         mp={"phuongtien.loai"},
-        mp_any=[{"chiso.nongDoCon_khiTho", "chiso.nongDoCon_mau"}],
+        mp_any=[_NONG_DO],
         goal="Xác định mức phạt do vi phạm nồng độ cồn",
         sol=[
             "Deduce_Rules: đối chiếu mức cồn (khí thở/máu) trong nhóm 'nong_do_con'",
@@ -68,11 +105,42 @@ SAMPLE_PROBLEMS: List[SampleProblem] = [
     ),
     SampleProblem(
         name="An toàn & tín hiệu",
-        mp={"phuongtien.loai"},
-        goal="Xác định phạt lỗi mũ/dây an toàn/đèn đỏ/giấy tờ",
+        mp=set(),
+        mp_any=[_AN_TOAN],
+        goal="Xác định phạt lỗi mũ bảo hiểm / dây an toàn / đèn đỏ-vàng / không chấp hành CSGT",
         sol=[
-            "Deduce_Rules: đối chiếu các hành vi bool trong nhóm 'an_toan_tin_hieu'",
-            "Aggregate: gộp các lỗi độc lập",
+            "Deduce_Rules: đối chiếu hành vi trong nhóm 'an_toan_tin_hieu'",
+            "Aggregate: gộp các lỗi độc lập theo loại phương tiện",
+        ],
+    ),
+    SampleProblem(
+        name="Làn đường & dừng đỗ",
+        mp=set(),
+        mp_any=[_LAN_DUONG],
+        goal="Xác định phạt đi sai làn / ngược chiều / quay đầu cấm / dừng đỗ sai",
+        sol=[
+            "Deduce_Rules: nhóm 'lan_duong' / 'dung_do'",
+            "Aggregate: gộp tiền phạt theo loại phương tiện",
+        ],
+    ),
+    SampleProblem(
+        name="Giấy tờ xe / người lái",
+        mp=set(),
+        mp_any=[_GIAY_TO],
+        goal="Xác định phạt thiếu/sai GPLX, đăng ký, bảo hiểm, đăng kiểm",
+        sol=[
+            "Deduce_Rules: nhóm 'giay_to'",
+            "Aggregate: gộp các lỗi giấy tờ độc lập",
+        ],
+    ),
+    SampleProblem(
+        name="Chủ xe / cải tạo & biển số",
+        mp=set(),
+        mp_any=[_CHU_XE],
+        goal="Xác định phạt thay đổi số máy/khung, biển số, xe quá hạn sử dụng",
+        sol=[
+            "Deduce_Rules: nhóm 'chu_xe' / 'bien_so'",
+            "Aggregate: mức phạt theo loại phương tiện",
         ],
     ),
 ]

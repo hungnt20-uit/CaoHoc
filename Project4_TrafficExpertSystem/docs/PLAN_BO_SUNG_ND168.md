@@ -127,6 +127,28 @@ Mỗi phase: **concept → rule → test → README**. Không merge rule thiếu
 | C / P2 | Biển số, ĐKX/đăng kiểm, tách `giay_to.yaml` | Đã làm |
 | D / P3–P4 | Vận tải, hành khách, đi bộ, chủ xe | Đã làm (MVP facts/rules) |
 
+### Audit văn bản gốc (2026-08-05)
+
+Nguồn: `docs/references/168_2024_ND-CP_619502.docx`.
+
+Đã chỉnh lại mức/`can_cu` các case demo:
+
+| Case | Căn cứ | Mức (min–max) |
+|---|---|---|
+| Ô tô sai làn | Đ6.K5.b (+ trừ 2 điểm) | 4–6 triệu |
+| Xe máy sai làn | Đ7.K3.d | 600–800 nghìn |
+| Ô tô chuyển làn không tín hiệu | Đ6.K2.a | 600–800 nghìn |
+| Xe máy chuyển làn không tín hiệu | Đ7.K1.e | 200–400 nghìn |
+| Xe đạp sai phần đường | Đ9.K1.a | 100–200 nghìn |
+| Ô tô đỗ nơi cấm (MVP) | Đ6.K3.e | 800 nghìn–1 triệu |
+| Xe máy dừng/đỗ nơi cấm | Đ7.K2.e | 400–600 nghìn |
+| Xe đạp để xe lòng đường/vỉa hè | Đ9.K1.k | 100–200 nghìn |
+| Khu dân cư → giới hạn 50 km/h | Func `gioi_han_theo_khu_vuc` (QCVN) + luật tốc độ Đ6/Đ7 | theo khung vượt |
+| Xe máy cầm ĐT / đeo tai nghe | Đ7.K4.đ (+ trừ 4 điểm) | 800 nghìn–1 triệu |
+| Ô tô cầm điện thoại | Đ6.K5.h (+ trừ 4 điểm) | 4–6 triệu |
+
+Eval bổ sung: **c29–c35**. Vẫn chưa phủ toàn bộ NĐ 168.
+
 ---
 
 ## 9. Rủi ro

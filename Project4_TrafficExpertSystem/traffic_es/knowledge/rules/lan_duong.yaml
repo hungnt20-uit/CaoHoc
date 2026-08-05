@@ -1,4 +1,5 @@
 # Nhóm: LÀN ĐƯỜNG / PHẦN ĐƯỜNG — Nghị định 168/2024/NĐ-CP
+# Đối chiếu văn bản gốc (docx 168_2024_ND-CP): Điều 6/7/9.
 rules:
   - id: R_SAI_LAN_OTO
     nhom: lan_duong
@@ -8,11 +9,11 @@ rules:
           - "hanhvi.sai_lan == true"
           - "hanhvi.sai_phan_duong == true"
     ket_luan:
-      hanh_vi: "Ô tô đi không đúng làn đường hoặc phần đường quy định"
+      hanh_vi: "Ô tô không đi đúng phần đường hoặc làn đường quy định"
       tien_phat_min: 4000000
       tien_phat_max: 6000000
       phat_bo_sung: { tru_diem: 2 }
-      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 4 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 5, diem: "b" }
 
   - id: R_SAI_LAN_XEMAY
     nhom: lan_duong
@@ -22,10 +23,10 @@ rules:
           - "hanhvi.sai_lan == true"
           - "hanhvi.sai_phan_duong == true"
     ket_luan:
-      hanh_vi: "Xe máy đi không đúng làn đường hoặc phần đường quy định"
-      tien_phat_min: 800000
-      tien_phat_max: 1000000
-      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 3 }
+      hanh_vi: "Xe máy không đi đúng phần đường, làn đường quy định"
+      tien_phat_min: 600000
+      tien_phat_max: 800000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 3, diem: "d" }
 
   - id: R_CHUYEN_LAN_KHONG_TIN_HIEU_OTO
     nhom: lan_duong
@@ -33,10 +34,10 @@ rules:
     dieu_kien:
       - "hanhvi.chuyen_lan_khong_tin_hieu == true"
     ket_luan:
-      hanh_vi: "Ô tô chuyển làn không có tín hiệu báo trước"
-      tien_phat_min: 800000
-      tien_phat_max: 1000000
-      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 2 }
+      hanh_vi: "Ô tô chuyển làn đường không đúng nơi cho phép hoặc không có tín hiệu báo trước"
+      tien_phat_min: 600000
+      tien_phat_max: 800000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 2, diem: "a" }
 
   - id: R_CHUYEN_LAN_KHONG_TIN_HIEU_XEMAY
     nhom: lan_duong
@@ -44,10 +45,10 @@ rules:
     dieu_kien:
       - "hanhvi.chuyen_lan_khong_tin_hieu == true"
     ket_luan:
-      hanh_vi: "Xe máy chuyển làn không có tín hiệu báo trước"
-      tien_phat_min: 400000
-      tien_phat_max: 600000
-      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 1 }
+      hanh_vi: "Xe máy chuyển làn đường không đúng nơi cho phép hoặc không có tín hiệu báo trước"
+      tien_phat_min: 200000
+      tien_phat_max: 400000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 1, diem: "e" }
 
   - id: R_SAI_LAN_XEDAP
     nhom: lan_duong
@@ -57,7 +58,7 @@ rules:
           - "hanhvi.sai_lan == true"
           - "hanhvi.sai_phan_duong == true"
     ket_luan:
-      hanh_vi: "Xe đạp / xe thô sơ đi không đúng phần đường quy định"
-      tien_phat_min: 200000
-      tien_phat_max: 400000
-      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 9 }
+      hanh_vi: "Xe đạp / xe thô sơ không đi đúng phần đường quy định"
+      tien_phat_min: 100000
+      tien_phat_max: 200000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 9, khoan: 1, diem: "a" }

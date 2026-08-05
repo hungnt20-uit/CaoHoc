@@ -6,6 +6,7 @@ from typing import Dict, List, Tuple
 
 from traffic_es.llm.client import LLMClient
 from traffic_es.nlu.evidence import cites_source, number_appears
+from traffic_es.nlu.extractor import HeuristicExtractor
 from traffic_es.nlu.grounding import ground
 
 SYSTEM = (
@@ -14,10 +15,13 @@ SYSTEM = (
     'Mỗi node viết dạng "<node>": {"value": <giá trị>, "nguon": "<trích nguyên văn>"}. '
     "'nguon' phải COPY Y HỆT một cụm chữ có trong câu gốc — không diễn giải, không thêm "
     "chữ nào, không viết kiểu \"cụm chữ '...'\". Node nào không trích dẫn được sẽ bị loại. "
-    "Node hợp lệ: phuongtien.loai ('o_to'|'xe_may'); chiso.nongDoCon_khiTho (mg/l); "
+    "Node hợp lệ: phuongtien.loai ('o_to'|'xe_may'|'xe_dap'); chiso.nongDoCon_khiTho (mg/l); "
     "chiso.nongDoCon_mau (mg/100ml); chiso.tocDo; chiso.tocDoGioiHan (km/h); "
-    "boicanh.khuVuc ('khu_dan_cu'); nguoi.khong_mu_bao_hiem/khong_day_an_toan (bool); "
-    "nguoi.coGPLX (bool); hanhvi.vuot_den_do (bool). "
+    "boicanh.khuVuc ('khu_dan_cu'|'do_thi'|'ngoai_do_thi'|'cao_toc'); "
+    "nguoi.khong_mu_bao_hiem/khong_day_an_toan (bool); nguoi.coGPLX (bool); "
+    "hanhvi.vuot_den_do/vuot_den_vang/khong_chap_hanh_csgt (bool); "
+    "hanhvi.cam_dien_thoai (bool); hanhvi.su_dung_thiet_bi_am_thanh (bool); "
+    "hanhvi.sai_lan/sai_phan_duong/dung_do_sai (bool). "
     "Hiểu ngữ nghĩa chủ đề: "
     "(A) NỒNG ĐỘ CỒN — 'uống rượu', 'uống bia', 'nhậu', 'say', 'say xỉn', 'say rượu', "
     "'có cồn', kể cả viết sai/thiếu dấu gần nghĩa (vd 'uống rựu'). Khi đó: đưa cụm vào "
@@ -32,6 +36,12 @@ SYSTEM = (
     "'không chấp hành hiệu lệnh', 'vượt đèn vàng' (nếu câu nói rõ là tín hiệu đèn), "
     "kể cả diễn đạt gần nghĩa. Khi đó: đặt hanhvi.vuot_den_do=true với nguon là cụm "
     "trong câu (KHÔNG đặt nếu câu phủ định kiểu 'không vượt đèn'). "
+    "(D) CẦM ĐIỆN THOẠI / TAI NGHE — 'cầm điện thoại', 'dùng điện thoại', 'nghe điện thoại', "
+    "'cầm điện thoai' (sai chính tả), 'đeo tai nghe', 'tai nghe', 'thiết bị âm thanh'. "
+    "Khi đó: hanhvi.cam_dien_thoai=true (điện thoại) hoặc "
+    "hanhvi.su_dung_thiet_bi_am_thanh=true (tai nghe), nguon là cụm trong câu. "
+    "(E) SAI LÀN / DỪNG ĐỖ — 'lấn làn', 'sai làn', 'không đúng làn', 'đỗ nơi cấm', "
+    "'đậu nơi cấm', 'cấm đỗ' → hanhvi.sai_lan hoặc hanhvi.dung_do_sai = true. "
     "Sự kiện va chạm/tái phạm/bỏ chạy cũng để trong raw_events. "
     "TUYỆT ĐỐI không bịa số và không tự điền giá trị mặc định theo luật: chỉ ghi những gì "
     "câu nói rõ. "
@@ -156,12 +166,24 @@ class LLMExtractor:
 
     def extract(self, text: str) -> Tuple[Dict[str, object], Dict[str, str], List[str]]:
         self.last_dropped, self.last_warnings = {}, []
+        # Heuristic luôn chạy: vá fact LLM hay bỏ sót (vd. cầm điện thoại ngoài closed-vocab cũ).
+        heur_facts, heur_ev, heur_raw = HeuristicExtractor().extract(text)
         data = _parse(self.llm.complete(system=SYSTEM, user=text))
         if not data:
-            return {}, {}, []
+            return heur_facts, heur_ev, heur_raw
         facts, evidences, dropped = _verify(_as_fact_map(data.get("facts")), text)
         facts, ground_warns = ground(facts)  # grounding chống ảo giác / node lạ
+        for key, value in heur_facts.items():
+            if key not in facts:
+                facts[key] = value
+                if key in heur_ev:
+                    evidences[key] = heur_ev[key]
+        facts, ground_warns2 = ground(facts)
         self.last_dropped = dropped
-        self.last_warnings = ground_warns
+        self.last_warnings = ground_warns + ground_warns2
         evidences = {k: v for k, v in evidences.items() if k in facts}
-        return facts, evidences, _as_events(data.get("raw_events"))
+        raw = _as_events(data.get("raw_events"))
+        for e in heur_raw:
+            if e not in raw:
+                raw.append(e)
+        return facts, evidences, raw

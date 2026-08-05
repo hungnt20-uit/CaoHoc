@@ -17,8 +17,10 @@ def test_con_problem_matches_either_measure():
     assert p is not None and p.name == "Nồng độ cồn"
 
 
-def test_no_match_without_vehicle():
+def test_no_match_without_relevant_facts():
     assert best_problem({"chiso.tocDo": 80.0}) is None
+    # Chỉ có loại xe — không còn khớp mẫu “An toàn” chung chung
+    assert best_problem({"phuongtien.loai": "o_to"}) is None
 
 
 def test_specificity_prefers_speed_over_generic():
@@ -28,4 +30,17 @@ def test_specificity_prefers_speed_over_generic():
         "chiso.tocDoGioiHan": 50.0,
     }
     names = [p.name for p in match_problems(facts)]
-    assert names[0] == "Vi phạm tốc độ"  # đặc hiệu hơn "An toàn & tín hiệu"
+    assert names[0] == "Vi phạm tốc độ"
+
+
+def test_multi_violation_matches_several_samples():
+    facts = {
+        "phuongtien.loai": "xe_may",
+        "hanhvi.sai_lan": True,
+        "hanhvi.vuot_den_do": True,
+        "hanhvi.thay_doi_may_khung": True,
+    }
+    names = {p.name for p in match_problems(facts)}
+    assert "An toàn & tín hiệu" in names
+    assert "Làn đường & dừng đỗ" in names
+    assert "Chủ xe / cải tạo & biển số" in names

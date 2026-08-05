@@ -122,12 +122,44 @@ concepts:
     attrs: { nhom: "giay_to", fact: "giayto.khong_mang_dang_kiem", value: "true" }
     keyphrases: ["không mang đăng kiểm", "hết hạn đăng kiểm", "quên đăng kiểm", "không có tem đăng kiểm"]
 
+  - name: "cầm điện thoại khi lái xe"
+    content: "Dùng tay cầm và sử dụng điện thoại hoặc thiết bị điện tử khi điều khiển phương tiện."
+    inner_rul: "Điều 6 khoản 5 điểm h; Điều 7 khoản 4 điểm đ NĐ 168/2024"
+    attrs: { nhom: "an_toan", fact: "hanhvi.cam_dien_thoai", value: "true" }
+    keyphrases:
+      - "cầm điện thoại"
+      - "dùng điện thoại"
+      - "sử dụng điện thoại"
+      - "nghe điện thoại"
+      - "nhắn tin khi lái"
+      - "cầm điện thoại khi lái"
+      - "vừa lái vừa cầm điện thoại"
+  - name: "dùng thiết bị âm thanh khi lái xe máy"
+    content: "Người điều khiển xe máy sử dụng thiết bị âm thanh (trừ trợ thính) khi tham gia giao thông."
+    inner_rul: "Điều 7 khoản 4 điểm đ NĐ 168/2024"
+    attrs: { nhom: "an_toan", fact: "hanhvi.su_dung_thiet_bi_am_thanh", value: "true" }
+    keyphrases:
+      - "đeo tai nghe"
+      - "tai nghe"
+      - "nghe nhạc khi lái"
+      - "thiết bị âm thanh"
+      - "đeo headphone"
+
   # ── Làn đường / tránh vượt / dừng đỗ ────────────────────────────
   - name: "đi sai làn"
     content: "Đi không đúng làn đường hoặc phần đường quy định."
-    inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
+    inner_rul: "Điều 6 khoản 5 điểm b; Điều 7 khoản 3 điểm d; Điều 9 khoản 1 điểm a NĐ 168/2024"
     attrs: { nhom: "lan_duong", fact: "hanhvi.sai_lan", value: "true" }
-    keyphrases: ["sai làn", "đi sai làn", "không đúng làn", "lấn làn", "sai phần đường"]
+    keyphrases:
+      - "sai làn"
+      - "đi sai làn"
+      - "không đúng làn"
+      - "lấn làn"
+      - "sai phần đường"
+      - "không đúng phần đường"
+      - "không đúng làn đường"
+      - "đi không đúng phần đường"
+      - "đi không đúng làn"
   - name: "chuyển làn không báo hiệu"
     content: "Chuyển làn đường không có tín hiệu báo trước."
     inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
@@ -150,9 +182,29 @@ concepts:
     keyphrases: ["đi ngược chiều", "ngược chiều", "đi ngược đường một chiều", "ngược chiều đường một chiều"]
   - name: "dừng đỗ sai quy định"
     content: "Dừng, đỗ xe không đúng quy định hoặc tại vị trí cấm."
-    inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
+    inner_rul: "Điều 6 khoản 3 điểm e; Điều 7 khoản 2 điểm e; Điều 9 khoản 1 điểm k NĐ 168/2024"
     attrs: { nhom: "dung_do", fact: "hanhvi.dung_do_sai", value: "true" }
-    keyphrases: ["đỗ sai", "dừng sai", "đỗ nơi cấm", "đỗ xe cấm", "dừng đỗ trái phép", "đỗ dưới biển cấm"]
+    keyphrases:
+      - "đỗ sai"
+      - "dừng sai"
+      - "đỗ nơi cấm"
+      - "đỗ xe cấm"
+      - "dừng đỗ trái phép"
+      - "đỗ dưới biển cấm"
+      - "đậu sai"
+      - "đậu xe sai"
+      - "đậu nơi cấm"
+      - "cấm đỗ"
+      - "cấm dừng"
+      - "đỗ lòng đường"
+      - "đỗ vỉa hè"
+      - "để xe lòng đường"
+      - "đỗ sai nơi quy định"
+  - name: "khu dân cư"
+    content: "Khu vực dân cư — dùng suy giới hạn tốc độ mặc định (thường 50 km/h) khi chưa nêu tường minh."
+    inner_rul: "QCVN / thực tiễn; kết hợp Điều 6/7 NĐ 168 (vượt tốc độ)"
+    attrs: { nhom: "boicanh", fact: "boicanh.khuVuc", value: "khu_dan_cu" }
+    keyphrases: ["khu dân cư", "trong khu dân cư", "đường trong khu dân cư"]
 
   # ── Biển số ─────────────────────────────────────────────────────
   - name: "biển số giả hoặc che biển"
@@ -203,7 +255,15 @@ concepts:
     content: "Tự ý thay đổi máy, khung hoặc màu sơn trái quy định."
     inner_rul: "Điều 30 Nghị định 168/2024/NĐ-CP"
     attrs: { nhom: "chu_xe", fact: "hanhvi.thay_doi_may_khung", value: "true" }
-    keyphrases: ["đổi máy trái phép", "thay khung xe", "đổi màu sơn trái phép", "cải tạo xe trái phép"]
+    keyphrases:
+      - "đổi máy trái phép"
+      - "thay khung xe"
+      - "đổi màu sơn trái phép"
+      - "cải tạo xe trái phép"
+      - "số khung"
+      - "thay đổi số khung"
+      - "đổi số khung"
+      - "khung có thay đổi"
 
   # ── Tình tiết tăng nặng ─────────────────────────────────────────
   - name: "gây tai nạn"

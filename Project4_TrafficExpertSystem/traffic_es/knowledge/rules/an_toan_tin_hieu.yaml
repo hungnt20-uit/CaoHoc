@@ -94,3 +94,30 @@ rules:
       tien_phat_max: 6000000
       phat_bo_sung: { tru_diem: 4 }
       can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 7, diem: "d" }
+
+  # Cầm điện thoại / thiết bị điện tử — Đ6.K5.h (ô tô), Đ7.K4.đ (xe máy; gồm cả TB âm thanh)
+  - id: R_CAM_DIEN_THOAI_OTO
+    nhom: an_toan
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "hanhvi.cam_dien_thoai == true"
+    ket_luan:
+      hanh_vi: "Ô tô dùng tay cầm và sử dụng điện thoại hoặc thiết bị điện tử khác khi đang điều khiển xe"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      phat_bo_sung: { tru_diem: 4 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 5, diem: "h" }
+
+  - id: R_CAM_DIEN_THOAI_XEMAY
+    nhom: an_toan
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - any:
+          - "hanhvi.cam_dien_thoai == true"
+          - "hanhvi.su_dung_thiet_bi_am_thanh == true"
+    ket_luan:
+      hanh_vi: "Xe máy sử dụng ô (dù), thiết bị âm thanh, cầm điện thoại hoặc thiết bị điện tử khi điều khiển xe"
+      tien_phat_min: 800000
+      tien_phat_max: 1000000
+      phat_bo_sung: { tru_diem: 4 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 4, diem: "đ" }

@@ -78,6 +78,8 @@ SCHEMA: Dict[str, Slot] = {
     "hanhvi.vuot_den_do": Slot(BOOL),
     "hanhvi.vuot_den_vang": Slot(BOOL),
     "hanhvi.khong_chap_hanh_csgt": Slot(BOOL),
+    "hanhvi.cam_dien_thoai": Slot(BOOL),
+    "hanhvi.su_dung_thiet_bi_am_thanh": Slot(BOOL),
     "hanhvi.sai_lan": Slot(BOOL),
     "hanhvi.sai_phan_duong": Slot(BOOL),
     "hanhvi.chuyen_lan_khong_tin_hieu": Slot(BOOL),

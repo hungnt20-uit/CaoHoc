@@ -1,4 +1,6 @@
 # Nhóm: DỪNG / ĐỖ XE — Nghị định 168/2024/NĐ-CP
+# MVP: gộp “dừng/đỗ sai / nơi cấm” vào fact chung; mức lấy theo hành vi phổ biến
+# (ô tô đỗ nơi cấm — Đ6.K3.e; xe máy dừng/đỗ nơi cấm — Đ7.K2.e; xe đạp — Đ9.K1.k).
 rules:
   - id: R_DUNG_DO_SAI_OTO
     nhom: dung_do
@@ -8,10 +10,10 @@ rules:
           - "hanhvi.dung_do_sai == true"
           - "boicanh.vi_tri_cam_do == true"
     ket_luan:
-      hanh_vi: "Ô tô dừng, đỗ không đúng quy định / tại vị trí cấm"
+      hanh_vi: "Ô tô đỗ xe nơi có biển cấm đỗ / cấm dừng và đỗ (hoặc dừng, đỗ không đúng quy định)"
       tien_phat_min: 800000
       tien_phat_max: 1000000
-      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 2 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 3, diem: "e" }
 
   - id: R_DUNG_DO_SAI_XEMAY
     nhom: dung_do
@@ -21,7 +23,20 @@ rules:
           - "hanhvi.dung_do_sai == true"
           - "boicanh.vi_tri_cam_do == true"
     ket_luan:
-      hanh_vi: "Xe máy dừng, đỗ không đúng quy định / tại vị trí cấm"
+      hanh_vi: "Xe máy dừng, đỗ nơi có biển cấm hoặc dừng đỗ không đúng quy định"
       tien_phat_min: 400000
       tien_phat_max: 600000
-      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 1 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 2, diem: "e" }
+
+  - id: R_DUNG_DO_SAI_XEDAP
+    nhom: dung_do
+    ap_dung_loai_xe: [xe_dap]
+    dieu_kien:
+      - any:
+          - "hanhvi.dung_do_sai == true"
+          - "boicanh.vi_tri_cam_do == true"
+    ket_luan:
+      hanh_vi: "Xe đạp / xe thô sơ để xe ở lòng đường, vỉa hè trái phép hoặc đỗ gây cản trở"
+      tien_phat_min: 100000
+      tien_phat_max: 200000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 9, khoan: 1, diem: "k" }

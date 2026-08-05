@@ -129,6 +129,9 @@ def enrich_pending_from_hints(
         return out
     if has_alcohol_measure(out) or has_speed_measure(out):
         return out
+    # Đã có tốc độ tuyệt đối (+ có thể suy giới hạn từ khu vực) → không hỏi khung vượt.
+    if "chiso.tocDo" in out:
+        return out
 
     for m in (meta or {}).get("matched_concepts") or []:
         nhom = str(m.get("nhom") or "")
@@ -153,9 +156,23 @@ def _strip_clarify_keys(facts: Dict[str, Any]) -> Dict[str, Any]:
     return {k: v for k, v in facts.items() if not str(k).startswith("clarify.")}
 
 
+# Đồng bộ với traffic_es.engine.funcs._GIOI_HAN_KHU_VUC — dùng khi kiểm tra clarify
+# trước khi Deduce_Objects chạy Func gioi_han_theo_khu_vuc.
+_GIOI_HAN_KHU_VUC = {
+    "khu_dan_cu": 50.0,
+    "do_thi": 60.0,
+    "ngoai_do_thi": 80.0,
+    "cao_toc": 120.0,
+}
+
+
 def _with_derived(facts: Mapping[str, Any]) -> Dict[str, Any]:
     """Bổ sung fact suy ra (vd. vượt tốc độ) để kiểm tra điều kiện luật trước khi infer."""
     out = dict(facts)
+    if "chiso.tocDoGioiHan" not in out:
+        khu = out.get("boicanh.khuVuc")
+        if khu in _GIOI_HAN_KHU_VUC:
+            out["chiso.tocDoGioiHan"] = _GIOI_HAN_KHU_VUC[khu]
     toc = out.get("chiso.tocDo")
     gioi = out.get("chiso.tocDoGioiHan")
     if toc is not None and gioi is not None and "chiso.vuot_toc_do_kmh" not in out:
