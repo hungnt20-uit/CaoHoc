@@ -1,0 +1,19 @@
+# Lớp liên kết & hiệu lực giữa các Nghị định xử phạt giao thông
+nghi_dinh:
+  - id: "100/2019/NĐ-CP"
+    ten: "Xử phạt VPHC lĩnh vực giao thông đường bộ và đường sắt"
+    linh_vuc: [duong_bo, duong_sat]
+    hieu_luc: "một phần"   # phần đường bộ đã bị thay thế bởi 168/2024
+  - id: "123/2021/NĐ-CP"
+    ten: "Sửa đổi, bổ sung một số điều của NĐ 100/2019"
+    sua_doi: "100/2019/NĐ-CP"
+    hieu_luc: "một phần"
+  - id: "168/2024/NĐ-CP"
+    ten: "Xử phạt VPHC về trật tự, an toàn giao thông đường bộ; trừ điểm GPLX"
+    linh_vuc: [duong_bo]
+    hieu_luc: "hiện hành"
+    thay_the: ["100/2019/NĐ-CP", "123/2021/NĐ-CP"]   # phần đường bộ, hiệu lực 01/01/2025
+
+hieu_luc_theo_linh_vuc:
+  duong_bo: "168/2024/NĐ-CP"
+  duong_sat: "100/2019/NĐ-CP"

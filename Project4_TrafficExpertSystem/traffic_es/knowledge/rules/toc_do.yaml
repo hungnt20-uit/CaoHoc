@@ -1,0 +1,84 @@
+# Nhóm hành vi: TỐC ĐỘ (chạy quá tốc độ) — Nghị định 168/2024/NĐ-CP
+# Điều kiện dùng chiso.vuot_toc_do_kmh = tocDo - tocDoGioiHan (Deduce_Objects).
+rules:
+  # ================= Ô TÔ (Điều 6) =================
+  - id: R_TOCDO_OTO_M1
+    nhom: toc_do
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - all: ["chiso.vuot_toc_do_kmh >= 5", "chiso.vuot_toc_do_kmh < 10"]
+    ket_luan:
+      hanh_vi: "Điều khiển ô tô chạy quá tốc độ quy định từ 05 km/h đến dưới 10 km/h"
+      tien_phat_min: 800000
+      tien_phat_max: 1000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 3, diem: "a" }
+
+  - id: R_TOCDO_OTO_M2
+    nhom: toc_do
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - all: ["chiso.vuot_toc_do_kmh >= 10", "chiso.vuot_toc_do_kmh <= 20"]
+    ket_luan:
+      hanh_vi: "Điều khiển ô tô chạy quá tốc độ quy định từ 10 km/h đến 20 km/h"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 5, diem: "đ" }
+
+  - id: R_TOCDO_OTO_M3
+    nhom: toc_do
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - all: ["chiso.vuot_toc_do_kmh > 20", "chiso.vuot_toc_do_kmh <= 35"]
+    ket_luan:
+      hanh_vi: "Điều khiển ô tô chạy quá tốc độ quy định trên 20 km/h đến 35 km/h"
+      tien_phat_min: 6000000
+      tien_phat_max: 8000000
+      phat_bo_sung: { tru_diem: 4 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 6, diem: "a" }
+
+  - id: R_TOCDO_OTO_M4
+    nhom: toc_do
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "chiso.vuot_toc_do_kmh > 35"
+    ket_luan:
+      hanh_vi: "Điều khiển ô tô chạy quá tốc độ quy định trên 35 km/h"
+      tien_phat_min: 12000000
+      tien_phat_max: 14000000
+      phat_bo_sung: { tru_diem: 6 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 7, diem: "a" }
+
+  # ================= XE MÁY (Điều 7) =================
+  - id: R_TOCDO_XEMAY_M1
+    nhom: toc_do
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - all: ["chiso.vuot_toc_do_kmh >= 5", "chiso.vuot_toc_do_kmh < 10"]
+    ket_luan:
+      hanh_vi: "Điều khiển xe máy chạy quá tốc độ quy định từ 05 km/h đến dưới 10 km/h"
+      tien_phat_min: 400000
+      tien_phat_max: 600000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 2, diem: "b" }
+
+  - id: R_TOCDO_XEMAY_M2
+    nhom: toc_do
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - all: ["chiso.vuot_toc_do_kmh >= 10", "chiso.vuot_toc_do_kmh <= 20"]
+    ket_luan:
+      hanh_vi: "Điều khiển xe máy chạy quá tốc độ quy định từ 10 km/h đến 20 km/h"
+      tien_phat_min: 800000
+      tien_phat_max: 1000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 4, diem: "a" }
+
+  - id: R_TOCDO_XEMAY_M3
+    nhom: toc_do
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - "chiso.vuot_toc_do_kmh > 20"
+    ket_luan:
+      hanh_vi: "Điều khiển xe máy chạy quá tốc độ quy định trên 20 km/h"
+      tien_phat_min: 6000000
+      tien_phat_max: 8000000
+      phat_bo_sung: { tru_diem: 4 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 8, diem: "a" }

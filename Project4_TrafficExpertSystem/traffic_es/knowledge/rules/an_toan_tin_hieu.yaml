@@ -1,0 +1,70 @@
+# Nhóm hành vi: AN TOÀN & TÍN HIỆU — Nghị định 168/2024/NĐ-CP
+# Số liệu & căn cứ trích, kiểm chứng từ văn bản gốc.
+rules:
+  - id: R_MU_XEMAY
+    nhom: mu_bao_hiem
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - "nguoi.khong_mu_bao_hiem == true"
+    ket_luan:
+      hanh_vi: "Người điều khiển/chở người trên xe máy không đội mũ bảo hiểm hoặc đội không cài quai đúng quy cách"
+      tien_phat_min: 400000
+      tien_phat_max: 600000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 2, diem: "h" }
+
+  - id: R_DAY_OTO
+    nhom: day_an_toan
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "nguoi.khong_day_an_toan == true"
+    ket_luan:
+      hanh_vi: "Không thắt dây đai an toàn khi điều khiển ô tô chạy trên đường"
+      tien_phat_min: 800000
+      tien_phat_max: 1000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 3, diem: "k" }
+
+  - id: R_DENDO_OTO
+    nhom: tin_hieu
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "hanhvi.vuot_den_do == true"
+    ket_luan:
+      hanh_vi: "Ô tô không chấp hành hiệu lệnh của đèn tín hiệu giao thông (vượt đèn đỏ)"
+      tien_phat_min: 18000000
+      tien_phat_max: 20000000
+      phat_bo_sung: { tru_diem: 4 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 9, diem: "b" }
+
+  - id: R_DENDO_XEMAY
+    nhom: tin_hieu
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - "hanhvi.vuot_den_do == true"
+    ket_luan:
+      hanh_vi: "Xe máy không chấp hành hiệu lệnh của đèn tín hiệu giao thông (vượt đèn đỏ)"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      phat_bo_sung: { tru_diem: 4 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 7, diem: "c" }
+
+  - id: R_NOGPLX_OTO
+    nhom: giay_to
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "nguoi.coGPLX == false"
+    ket_luan:
+      hanh_vi: "Điều khiển ô tô mà không có giấy phép lái xe"
+      tien_phat_min: 18000000
+      tien_phat_max: 20000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 18, khoan: 9, diem: "b" }
+
+  - id: R_NOGPLX_XEMAY
+    nhom: giay_to
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - "nguoi.coGPLX == false"
+    ket_luan:
+      hanh_vi: "Điều khiển xe máy mà không có giấy phép lái xe"
+      tien_phat_min: 2000000
+      tien_phat_max: 4000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 18, khoan: 5, diem: "a" }
