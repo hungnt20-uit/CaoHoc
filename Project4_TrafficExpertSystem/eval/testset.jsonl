@@ -1,0 +1,20 @@
+// Bộ testset gán nhãn vàng — Hệ chuyên gia luật giao thông (NĐ 168/2024)
+{"id":"c01","text":"Tôi lái ô tô, thổi nồng độ cồn 0.42 mg/l","expected":{"facts":{"phuongtien.loai":"o_to","chiso.nongDoCon_khiTho":0.42},"rule_ids":["R_CON_OTO_MUC3"],"tong_tien":35000000}}
+{"id":"c02","text":"Đi xe máy, nồng độ cồn trong máu 60 mg/100ml","expected":{"facts":{"phuongtien.loai":"xe_may","chiso.nongDoCon_mau":60},"rule_ids":["R_CON_XEMAY_MUC2"],"tong_tien":7000000}}
+{"id":"c03","text":"Ô tô chạy 75 km/h, giới hạn 50 km/h","expected":{"facts":{"phuongtien.loai":"o_to","chiso.tocDo":75,"chiso.tocDoGioiHan":50},"rule_ids":["R_TOCDO_OTO_M3"],"tong_tien":7000000}}
+{"id":"c04","text":"Chạy xe máy không đội mũ bảo hiểm","expected":{"facts":{"phuongtien.loai":"xe_may","nguoi.khong_mu_bao_hiem":true},"rule_ids":["R_MU_XEMAY"],"tong_tien":500000}}
+{"id":"c05","text":"Ô tô vượt đèn đỏ","expected":{"facts":{"phuongtien.loai":"o_to","hanhvi.vuot_den_do":true},"rule_ids":["R_DENDO_OTO"],"tong_tien":19000000}}
+{"id":"c06","text":"Tôi lái ô tô, nồng độ cồn 0.42 mg/l, rồi đâm vào một xe máy","expected":{"facts":{"phuongtien.loai":"o_to","chiso.nongDoCon_khiTho":0.42,"tinhtiet.gay_tai_nan":true},"rule_ids":["R_CON_OTO_MUC3"],"tong_tien":40000000}}
+{"id":"c07","text":"Lái ô tô bình thường không vi phạm gì","expected":{"facts":{"phuongtien.loai":"o_to"},"rule_ids":[],"tong_tien":0}}
+{"id":"c08","text":"Xe máy chạy 70 km/h, giới hạn 50 km/h","expected":{"facts":{"phuongtien.loai":"xe_may","chiso.tocDo":70,"chiso.tocDoGioiHan":50},"rule_ids":["R_TOCDO_XEMAY_M2"],"tong_tien":900000}}
+{"id":"c09","text":"Ô tô không thắt dây an toàn khi lái","expected":{"facts":{"phuongtien.loai":"o_to","nguoi.khong_day_an_toan":true},"rule_ids":["R_DAY_OTO"],"tong_tien":900000}}
+{"id":"c10","text":"Xe máy không có giấy phép lái xe","expected":{"facts":{"phuongtien.loai":"xe_may","nguoi.coGPLX":false},"rule_ids":["R_NOGPLX_XEMAY"],"tong_tien":3000000}}
+{"id":"c11","text":"Ô tô nồng độ cồn 0.2 mg/l","expected":{"facts":{"phuongtien.loai":"o_to","chiso.nongDoCon_khiTho":0.2},"rule_ids":["R_CON_OTO_MUC1"],"tong_tien":7000000}}
+{"id":"c12","text":"Xe máy nồng độ cồn 0.5 mg/l, đâm vào ô tô","expected":{"facts":{"phuongtien.loai":"xe_may","chiso.nongDoCon_khiTho":0.5,"tinhtiet.gay_tai_nan":true},"rule_ids":["R_CON_XEMAY_MUC3"],"tong_tien":10000000}}
+{"id":"c13","text":"Ô tô chạy 90 km/h, giới hạn 50 km/h","expected":{"facts":{"phuongtien.loai":"o_to","chiso.tocDo":90,"chiso.tocDoGioiHan":50},"rule_ids":["R_TOCDO_OTO_M4"],"tong_tien":13000000}}
+{"id":"c14","text":"Xe máy vượt đèn đỏ và không đội mũ bảo hiểm","expected":{"facts":{"phuongtien.loai":"xe_may","hanhvi.vuot_den_do":true,"nguoi.khong_mu_bao_hiem":true},"rule_ids":["R_DENDO_XEMAY","R_MU_XEMAY"],"tong_tien":5500000}}
+{"id":"c15","text":"Ô tô, nồng độ cồn trong máu 90 mg/100ml","expected":{"facts":{"phuongtien.loai":"o_to","chiso.nongDoCon_mau":90},"rule_ids":["R_CON_OTO_MUC3"],"tong_tien":35000000}}
+{"id":"c16","text":"Ô tô chạy 60 km/h, giới hạn 50 km/h","expected":{"facts":{"phuongtien.loai":"o_to","chiso.tocDo":60,"chiso.tocDoGioiHan":50},"rule_ids":["R_TOCDO_OTO_M2"],"tong_tien":5000000}}
+{"id":"c17","text":"Xe máy đi bình thường, có bằng lái đầy đủ","expected":{"facts":{"phuongtien.loai":"xe_may"},"rule_ids":[],"tong_tien":0}}
+{"id":"c18","text":"Ô tô nồng độ cồn 0.3 mg/l, chạy 75 km/h, giới hạn 50 km/h","expected":{"facts":{"phuongtien.loai":"o_to","chiso.nongDoCon_khiTho":0.3,"chiso.tocDo":75,"chiso.tocDoGioiHan":50},"rule_ids":["R_CON_OTO_MUC2","R_TOCDO_OTO_M3"],"tong_tien":26000000}}
+{"id":"c19","text":"Ô tô chạy 75 km/h trong khu dân cư","expected":{"facts":{"phuongtien.loai":"o_to","chiso.tocDo":75,"chiso.tocDoGioiHan":50,"boicanh.khuVuc":"khu_dan_cu"},"rule_ids":["R_TOCDO_OTO_M3"],"tong_tien":7000000}}

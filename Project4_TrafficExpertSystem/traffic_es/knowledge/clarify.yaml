@@ -1,0 +1,63 @@
+# Cấu hình hỏi bổ sung (UI clarify) — chỉnh nhãn/khung tại đây, không hardcode trong Python.
+# `facts`: patch gộp vào WorkingMemory khi user chọn.
+# `pending`: đánh dấu cần hỏi khung mức ở bước sau (nong_do_con | toc_do).
+
+vehicle_choices:
+  o_to: "Ô tô"
+  xe_may: "Xe máy"
+
+prompts:
+  vehicle: "Bạn đang điều khiển loại phương tiện nào? (Mức phạt theo Nghị định 168 khác nhau giữa ô tô và xe máy.)"
+  behavior: "Chưa xác định được hành vi vi phạm cụ thể. Bạn đang hỏi về lỗi nào?"
+  alcohol_band: "Nồng độ cồn thuộc mức nào? (theo ngưỡng Nghị định 168)"
+  speed_band: "Bạn vượt quá tốc độ quy định bao nhiêu?"
+
+behaviors:
+  vuot_den_do:
+    label: "Vượt đèn đỏ"
+    facts: { hanhvi.vuot_den_do: true }
+  khong_mu:
+    label: "Không đội mũ bảo hiểm (xe máy)"
+    facts: { nguoi.khong_mu_bao_hiem: true, phuongtien.loai: xe_may }
+  khong_day:
+    label: "Không thắt dây an toàn (ô tô)"
+    facts: { nguoi.khong_day_an_toan: true, phuongtien.loai: o_to }
+  khong_gplx:
+    label: "Không có giấy phép lái xe"
+    facts: { nguoi.coGPLX: false }
+  nong_do_con:
+    label: "Vi phạm nồng độ cồn"
+    pending: nong_do_con
+  vuot_toc_do:
+    label: "Vượt tốc độ"
+    pending: toc_do
+
+# Giá trị đại diện nằm đúng trong khung luật YAML (rules/*.yaml).
+alcohol_bands:
+  con_muc1:
+    label: "Mức 1 — chưa quá 0,25 mg/l khí thở (hoặc 50 mg/100ml máu)"
+    facts: { chiso.nongDoCon_khiTho: 0.2 }
+  con_muc2:
+    label: "Mức 2 — trên 0,25 đến 0,4 mg/l khí thở (hoặc 50–80 mg/100ml máu)"
+    facts: { chiso.nongDoCon_khiTho: 0.3 }
+  con_muc3:
+    label: "Mức 3 — trên 0,4 mg/l khí thở (hoặc trên 80 mg/100ml máu)"
+    facts: { chiso.nongDoCon_khiTho: 0.5 }
+
+speed_bands:
+  toc_5_10:
+    label: "Vượt từ 5 đến dưới 10 km/h"
+    example: "tốc độ cho phép là 50 km/h, bạn chạy 57 km/h"
+    facts: { chiso.vuot_toc_do_kmh: 7.0 }
+  toc_10_20:
+    label: "Vượt từ 10 đến 20 km/h"
+    example: "tốc độ cho phép là 50 km/h, bạn chạy 65 km/h"
+    facts: { chiso.vuot_toc_do_kmh: 15.0 }
+  toc_20_35:
+    label: "Vượt trên 20 đến 35 km/h"
+    example: "tốc độ cho phép là 50 km/h, bạn chạy 78 km/h"
+    facts: { chiso.vuot_toc_do_kmh: 28.0 }
+  toc_over_35:
+    label: "Vượt trên 35 km/h"
+    example: "tốc độ cho phép là 50 km/h, bạn chạy 90 km/h"
+    facts: { chiso.vuot_toc_do_kmh: 40.0 }

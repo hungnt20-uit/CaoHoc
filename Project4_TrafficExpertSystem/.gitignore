@@ -1,7 +1,29 @@
+# Python
 __pycache__/
 *.pyc
-.venv/
-.env
-.pytest_cache/
+*.pyo
 *.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments (không push)
+.venv/
+venv/
+env/
+
+# Secrets — chỉ commit .env.example (placeholder)
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# OS / IDE
 .DS_Store
+.idea/
+.vscode/
+*.swp
+
+# Agent / local tooling copies
+.agents/
+.claude/

@@ -1,0 +1,18 @@
+services:
+  web:
+    build: .
+    container_name: traffic-es
+    ports:
+      - "8501:8501"
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      # Cho phép override khi chạy compose mà không có file .env
+      TRAFFIC_ES_LLM_PROVIDER: ${TRAFFIC_ES_LLM_PROVIDER:-}
+      TRAFFIC_ES_LLM_MODEL: ${TRAFFIC_ES_LLM_MODEL:-}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY:-}
+      TRAFFIC_ES_LOCAL_BASE_URL: ${TRAFFIC_ES_LOCAL_BASE_URL:-}
+      TRAFFIC_ES_LOCAL_MODEL: ${TRAFFIC_ES_LOCAL_MODEL:-}
+    restart: unless-stopped

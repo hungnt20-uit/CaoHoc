@@ -1,0 +1,21 @@
+# Tình tiết tăng nặng / giảm nhẹ áp cho MỌI nhóm hành vi.
+# Căn cứ: Điều 9 (giảm nhẹ) và Điều 10 (tăng nặng) Luật Xử lý vi phạm hành chính 2012.
+# Mức mặc định khi không có tình tiết nào là trung bình khung (Điều 23 khoản 4).
+meta_rules:
+  - id: M_TANG_NANG_KHONG_CHAP_HANH
+    loai: tinh_tiet
+    dieu_kien: ["tinhtiet.khong_chap_hanh == true"]
+    chon_muc: max
+    ghi_chu: "Tình tiết tăng nặng: không chấp hành/chống đối người thi hành công vụ."
+
+  - id: M_TANG_NANG_TAI_PHAM
+    loai: tinh_tiet
+    dieu_kien: ["tinhtiet.tai_pham == true"]
+    chon_muc: max
+    ghi_chu: "Tình tiết tăng nặng: tái phạm hoặc vi phạm nhiều lần."
+
+  - id: M_GIAM_NHE_TU_NGUYEN_KHAI_BAO
+    loai: tinh_tiet
+    dieu_kien: ["tinhtiet.tu_nguyen_khai_bao == true"]
+    chon_muc: min
+    ghi_chu: "Tình tiết giảm nhẹ: tự nguyện khai báo, thành thật hối lỗi."
