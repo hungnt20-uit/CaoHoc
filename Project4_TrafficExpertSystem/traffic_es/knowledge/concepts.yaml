@@ -10,8 +10,13 @@ concepts:
     inner_rul: "Điều 3.39 QCVN 41:2016/BGTVT"
     attrs: { nhom: "phuong_tien", fact: "phuongtien.loai", value: "xe_may" }
     keyphrases: ["xe máy", "mô tô", "xe gắn máy", "xe mô tô", "xe máy điện"]
+  - name: "xe đạp"
+    content: "Xe thô sơ hai bánh chạy bằng sức người."
+    inner_rul: "Luật Trật tự, an toàn giao thông đường bộ 2024"
+    attrs: { nhom: "phuong_tien", fact: "phuongtien.loai", value: "xe_dap" }
+    keyphrases: ["xe đạp", "xe đạp điện", "xe thô sơ"]
 
-  # ── Chỉ số đo lường (là chủ đề bài toán, không phải boolean) ─────
+  # ── Chỉ số đo lường ─────────────────────────────────────────────
   - name: "nồng độ cồn"
     content: "Hàm lượng cồn trong khí thở (mg/L) hoặc trong máu (mg/100ml)."
     inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
@@ -44,8 +49,13 @@ concepts:
       - "chạy nhanh"
       - "km/h"
       - "kmh"
+  - name: "ma túy"
+    content: "Điều khiển phương tiện khi trong cơ thể có chất ma túy."
+    inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "chat_kich_thich", fact: "nguoi.co_chat_ma_tuy", value: "true" }
+    keyphrases: ["ma túy", "chất ma túy", "dương tính ma túy", "chất kích thích bị cấm", "có heroin", "có cần sa"]
 
-  # ── Hành vi (ánh xạ trực tiếp sang fact boolean) ────────────────
+  # ── An toàn / tín hiệu ──────────────────────────────────────────
   - name: "không đội mũ bảo hiểm"
     content: "Người điều khiển/ngồi trên xe máy không đội mũ bảo hiểm đúng quy cách."
     inner_rul: "Điều 7 khoản 2 điểm h Nghị định 168/2024/NĐ-CP"
@@ -57,7 +67,7 @@ concepts:
     attrs: { nhom: "day_an_toan", fact: "nguoi.khong_day_an_toan", value: "true" }
     keyphrases: ["không thắt dây", "không dây an toàn", "không cài dây", "quên thắt dây"]
   - name: "vượt đèn đỏ"
-    content: "Không chấp hành hiệu lệnh của đèn tín hiệu giao thông."
+    content: "Không chấp hành hiệu lệnh đèn đỏ của đèn tín hiệu giao thông."
     inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
     attrs: { nhom: "tin_hieu", fact: "hanhvi.vuot_den_do", value: "true" }
     keyphrases:
@@ -68,12 +78,132 @@ concepts:
       - "không chấp hành đèn tín hiệu"
       - "không chấp hành hiệu lệnh của đèn tín hiệu"
       - "không chấp hành hiệu lệnh đèn"
-      - "không chấp hành hiệu lệnh"
+  - name: "vượt đèn vàng"
+    content: "Không chấp hành hiệu lệnh đèn vàng / đèn tín hiệu giao thông."
+    inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "tin_hieu", fact: "hanhvi.vuot_den_vang", value: "true" }
+    keyphrases: ["vượt đèn vàng", "đèn vàng", "phóng đèn vàng"]
+  - name: "không chấp hành hiệu lệnh CSGT"
+    content: "Không chấp hành hiệu lệnh, hướng dẫn của CSGT hoặc người điều khiển giao thông."
+    inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "tin_hieu", fact: "hanhvi.khong_chap_hanh_csgt", value: "true" }
+    keyphrases:
+      - "không chấp hành hiệu lệnh của csgt"
+      - "không chấp hành hiệu lệnh csgt"
+      - "không tuân thủ csgt"
+      - "bỏ chạy khi csgt"
+      - "không dừng theo hiệu lệnh"
+      - "chống đối csgt"
+
+  # ── Giấy tờ / GPLX ──────────────────────────────────────────────
   - name: "không có giấy phép lái xe"
     content: "Điều khiển phương tiện mà không có giấy phép lái xe hợp lệ."
     inner_rul: "Điều 18 Nghị định 168/2024/NĐ-CP"
     attrs: { nhom: "giay_to", fact: "nguoi.coGPLX", value: "false" }
     keyphrases: ["không có giấy phép lái xe", "không bằng lái", "không gplx", "chưa có bằng lái", "không có bằng"]
+  - name: "chưa đủ tuổi lái xe"
+    content: "Điều khiển phương tiện khi chưa đủ tuổi theo quy định."
+    inner_rul: "Điều 18 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "giay_to", fact: "nguoi.chua_du_tuoi_lai_xe", value: "true" }
+    keyphrases: ["chưa đủ tuổi", "chưa đủ tuổi lái xe", "tuổi chưa đủ", "trẻ tuổi lái xe"]
+  - name: "GPLX không đúng thẩm quyền"
+    content: "Sử dụng GPLX không do cơ quan có thẩm quyền cấp."
+    inner_rul: "Điều 18 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "giay_to", fact: "nguoi.gplx_khong_dung_tham_quyen", value: "true" }
+    keyphrases: ["bằng giả", "gplx giả", "bằng không đúng thẩm quyền", "giấy phép giả"]
+  - name: "không mang đăng ký xe"
+    content: "Không mang theo / không có Giấy chứng nhận đăng ký xe."
+    inner_rul: "Điều 19/20 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "giay_to", fact: "giayto.khong_mang_dang_ky_xe", value: "true" }
+    keyphrases: ["không mang đăng ký", "không có đăng ký xe", "quên cà vẹt", "không mang cà vẹt"]
+  - name: "không mang đăng kiểm"
+    content: "Không mang theo hoặc hết hạn giấy chứng nhận kiểm định (ô tô)."
+    inner_rul: "Điều 19 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "giay_to", fact: "giayto.khong_mang_dang_kiem", value: "true" }
+    keyphrases: ["không mang đăng kiểm", "hết hạn đăng kiểm", "quên đăng kiểm", "không có tem đăng kiểm"]
+
+  # ── Làn đường / tránh vượt / dừng đỗ ────────────────────────────
+  - name: "đi sai làn"
+    content: "Đi không đúng làn đường hoặc phần đường quy định."
+    inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "lan_duong", fact: "hanhvi.sai_lan", value: "true" }
+    keyphrases: ["sai làn", "đi sai làn", "không đúng làn", "lấn làn", "sai phần đường"]
+  - name: "chuyển làn không báo hiệu"
+    content: "Chuyển làn đường không có tín hiệu báo trước."
+    inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "lan_duong", fact: "hanhvi.chuyen_lan_khong_tin_hieu", value: "true" }
+    keyphrases: ["chuyển làn không xi nhan", "không báo hiệu khi chuyển làn", "chuyển làn không tín hiệu", "không bật xi nhan"]
+  - name: "quay đầu nơi cấm"
+    content: "Quay đầu xe tại nơi có biển cấm quay đầu."
+    inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "quy_tac_tranh_vuot", fact: "hanhvi.quay_dau_cam", value: "true" }
+    keyphrases: ["quay đầu nơi cấm", "quay đầu xe nơi cấm", "cấm quay đầu", "quay đầu trái phép"]
+  - name: "vượt xe nơi cấm vượt"
+    content: "Vượt xe tại đoạn đường có biển cấm vượt."
+    inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "quy_tac_tranh_vuot", fact: "hanhvi.vuot_cam", value: "true" }
+    keyphrases: ["vượt nơi cấm vượt", "cấm vượt", "vượt xe trái phép", "vượt ẩu nơi cấm"]
+  - name: "đi ngược chiều"
+    content: "Đi ngược chiều trên đường một chiều hoặc phần đường dành cho chiều ngược lại."
+    inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "quy_tac_tranh_vuot", fact: "hanhvi.nguoc_chieu", value: "true" }
+    keyphrases: ["đi ngược chiều", "ngược chiều", "đi ngược đường một chiều", "ngược chiều đường một chiều"]
+  - name: "dừng đỗ sai quy định"
+    content: "Dừng, đỗ xe không đúng quy định hoặc tại vị trí cấm."
+    inner_rul: "Điều 6/7 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "dung_do", fact: "hanhvi.dung_do_sai", value: "true" }
+    keyphrases: ["đỗ sai", "dừng sai", "đỗ nơi cấm", "đỗ xe cấm", "dừng đỗ trái phép", "đỗ dưới biển cấm"]
+
+  # ── Biển số ─────────────────────────────────────────────────────
+  - name: "biển số giả hoặc che biển"
+    content: "Sử dụng biển số giả, che biển số hoặc làm thay đổi chữ số/ký hiệu biển số."
+    inner_rul: "Điều 19/20 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "bien_so", fact: "hanhvi.che_bien_so", value: "true" }
+    keyphrases: ["biển số giả", "che biển số", "bẻ biển số", "sửa biển số", "che biển", "làm giả biển số"]
+
+  # ── Vận tải ─────────────────────────────────────────────────────
+  - name: "chở quá tải"
+    content: "Vận chuyển hàng hóa vượt khối lượng cho phép."
+    inner_rul: "Điều 24 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "van_tai", fact: "hanhvi.cho_qua_tai", value: "true" }
+    keyphrases: ["chở quá tải", "quá tải trọng", "vượt tải", "xe quá tải"]
+  - name: "chở quá khổ"
+    content: "Vận chuyển hàng hóa vượt khổ giới hạn cho phép."
+    inner_rul: "Điều 24 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "van_tai", fact: "hanhvi.cho_qua_kho", value: "true" }
+    keyphrases: ["chở quá khổ", "quá khổ giới hạn", "hàng quá khổ"]
+  - name: "nhồi nhét hành khách"
+    content: "Chở quá số người quy định trên xe."
+    inner_rul: "Điều 23 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "van_tai", fact: "hanhvi.cho_qua_so_nguoi", value: "true" }
+    keyphrases: ["nhồi nhét", "chở quá số người", "quá số ghế", "xe khách quá tải người"]
+  - name: "đón trả khách sai quy định"
+    content: "Đón, trả khách không đúng nơi quy định hoặc trên đường cao tốc."
+    inner_rul: "Điều 23 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "van_tai", fact: "hanhvi.don_tra_khach_sai", value: "true" }
+    keyphrases: ["đón khách sai", "trả khách sai", "đón trả trên cao tốc", "xuống khách trên cao tốc"]
+
+  # ── Hành khách / người đi bộ / chủ xe ───────────────────────────
+  - name: "hành khách gây rối"
+    content: "Hành khách gây mất trật tự, đe dọa trên xe."
+    inner_rul: "Điều 11 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "hanh_khach", fact: "hanhvi.hanh_khach_gay_roi", value: "true" }
+    keyphrases: ["hành khách gây rối", "gây rối trên xe", "đe dọa tài xế", "hành hung trên xe"]
+  - name: "người đi bộ sai phần đường"
+    content: "Người đi bộ đi không đúng phần đường hoặc vượt dải phân cách."
+    inner_rul: "Điều 10 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "nguoi_di_bo", fact: "hanhvi.nguoi_di_bo_sai_phan_duong", value: "true" }
+    keyphrases: ["đi bộ sai phần đường", "đi bộ dưới lòng đường", "vượt dải phân cách", "đi bộ sang đường ẩu"]
+  - name: "giao xe không đủ điều kiện"
+    content: "Chủ phương tiện giao xe cho người không đủ điều kiện điều khiển."
+    inner_rul: "Điều 30 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "chu_xe", fact: "hanhvi.giao_xe_nguoi_khong_du_dk", value: "true" }
+    keyphrases: ["giao xe cho người không bằng", "cho mượn xe không bằng", "giao xe người chưa đủ điều kiện"]
+  - name: "cải tạo xe trái phép"
+    content: "Tự ý thay đổi máy, khung hoặc màu sơn trái quy định."
+    inner_rul: "Điều 30 Nghị định 168/2024/NĐ-CP"
+    attrs: { nhom: "chu_xe", fact: "hanhvi.thay_doi_may_khung", value: "true" }
+    keyphrases: ["đổi máy trái phép", "thay khung xe", "đổi màu sơn trái phép", "cải tạo xe trái phép"]
 
   # ── Tình tiết tăng nặng ─────────────────────────────────────────
   - name: "gây tai nạn"

@@ -17,4 +17,13 @@
 {"id":"c16","text":"Ô tô chạy 60 km/h, giới hạn 50 km/h","expected":{"facts":{"phuongtien.loai":"o_to","chiso.tocDo":60,"chiso.tocDoGioiHan":50},"rule_ids":["R_TOCDO_OTO_M2"],"tong_tien":5000000}}
 {"id":"c17","text":"Xe máy đi bình thường, có bằng lái đầy đủ","expected":{"facts":{"phuongtien.loai":"xe_may"},"rule_ids":[],"tong_tien":0}}
 {"id":"c18","text":"Ô tô nồng độ cồn 0.3 mg/l, chạy 75 km/h, giới hạn 50 km/h","expected":{"facts":{"phuongtien.loai":"o_to","chiso.nongDoCon_khiTho":0.3,"chiso.tocDo":75,"chiso.tocDoGioiHan":50},"rule_ids":["R_CON_OTO_MUC2","R_TOCDO_OTO_M3"],"tong_tien":26000000}}
-{"id":"c19","text":"Ô tô chạy 75 km/h trong khu dân cư","expected":{"facts":{"phuongtien.loai":"o_to","chiso.tocDo":75,"chiso.tocDoGioiHan":50,"boicanh.khuVuc":"khu_dan_cu"},"rule_ids":["R_TOCDO_OTO_M3"],"tong_tien":7000000}}
+{"id":"c19","text":"Ô tô chạy 75 km/h trong khu dân cư","expected":{"facts":{"phuongtien.loai":"o_to","chiso.tocDo":75,"boicanh.khuVuc":"khu_dan_cu"},"rule_ids":["R_TOCDO_OTO_M3"],"tong_tien":7000000}}
+{"id":"c20","text":"Ô tô không chấp hành hiệu lệnh của CSGT","expected":{"facts":{"phuongtien.loai":"o_to","hanhvi.khong_chap_hanh_csgt":true},"rule_ids":["R_CSGT_OTO"],"tong_tien":20000000}}
+{"id":"c21","text":"Xe máy dương tính ma túy khi bị kiểm tra","expected":{"facts":{"phuongtien.loai":"xe_may","nguoi.co_chat_ma_tuy":true},"rule_ids":["R_MATUY_XEMAY"],"tong_tien":9000000}}
+{"id":"c22","text":"Ô tô đi ngược chiều trên đường một chiều","expected":{"facts":{"phuongtien.loai":"o_to","hanhvi.nguoc_chieu":true},"rule_ids":["R_NGUOC_CHIEU_OTO"],"tong_tien":19000000}}
+{"id":"c23","text":"Xe máy đỗ nơi cấm","expected":{"facts":{"phuongtien.loai":"xe_may","hanhvi.dung_do_sai":true},"rule_ids":["R_DUNG_DO_SAI_XEMAY"],"tong_tien":500000}}
+{"id":"c24","text":"Ô tô che biển số","expected":{"facts":{"phuongtien.loai":"o_to","hanhvi.che_bien_so":true},"rule_ids":["R_BIEN_SO_GIA_OTO"],"tong_tien":23000000}}
+{"id":"c25","text":"Xe khách nhồi nhét hành khách","expected":{"facts":{"phuongtien.loai":"o_to","hanhvi.cho_qua_so_nguoi":true},"rule_ids":["R_CHO_QUA_SO_NGUOI"],"tong_tien":5000000}}
+{"id":"c26","text":"Người đi bộ vượt dải phân cách","expected":{"facts":{"hanhvi.vuot_dai_phan_cach":true},"rule_ids":["R_NGB_SAI_PHAN_DUONG"],"tong_tien":300000}}
+{"id":"c27","text":"Chủ xe giao xe cho người không bằng lái","expected":{"facts":{"hanhvi.giao_xe_nguoi_khong_du_dk":true},"rule_ids":["R_GIAO_XE_KHONG_DU_DK"],"tong_tien":5000000}}
+{"id":"c28","text":"Xe đạp đi sai phần đường","expected":{"facts":{"phuongtien.loai":"xe_dap","hanhvi.sai_phan_duong":true},"rule_ids":["R_SAI_LAN_XEDAP"],"tong_tien":300000}}

@@ -112,11 +112,20 @@ Mỗi phase: **concept → rule → test → README**. Không merge rule thiếu
 
 ## 8. Định nghĩa “xong” một nhóm lỗi
 
-- [ ] Có concept + keyphrases tiếng Việt thường gặp  
-- [ ] Có ≥1 rule YAML với LHS/RHS/`can_cu` đúng NĐ 168  
-- [ ] Engine fire đúng trên ≥1 câu NL demo  
-- [ ] Có ca trong `testset.jsonl` (hoặc test unit)  
-- [ ] README liệt kê nhóm trong “Phạm vi hỗ trợ”
+- [x] Có concept + keyphrases tiếng Việt thường gặp  
+- [x] Có ≥1 rule YAML với LHS/RHS/`can_cu` NĐ 168 (cần đối chiếu văn bản gốc khi audit)  
+- [x] Engine fire đúng trên ≥1 câu NL demo (`tests/test_nd168_expansion.py`)  
+- [x] Có ca trong `testset.jsonl` (c19–c28)  
+- [x] README liệt kê nhóm trong “Phạm vi hỗ trợ”
+
+### Trạng thái triển khai (2026-08-05, nhánh `feature/nd168-kb-expansion`)
+
+| Phase | Hạng mục | Trạng thái |
+|---|---|---|
+| A / P0 | Giới hạn khu vực, đèn vàng/CSGT, ma túy, GPLX mở rộng | Đã làm |
+| B / P1 | Làn đường, tránh vượt, dừng đỗ, xe đạp | Đã làm |
+| C / P2 | Biển số, ĐKX/đăng kiểm, tách `giay_to.yaml` | Đã làm |
+| D / P3–P4 | Vận tải, hành khách, đi bộ, chủ xe | Đã làm (MVP facts/rules) |
 
 ---
 

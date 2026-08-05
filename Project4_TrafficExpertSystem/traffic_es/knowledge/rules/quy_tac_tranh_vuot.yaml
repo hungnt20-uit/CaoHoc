@@ -1,0 +1,70 @@
+# Nhóm: QUAY ĐẦU / VƯỢT / NGƯỢC CHIỀU — Nghị định 168/2024/NĐ-CP
+rules:
+  - id: R_QUAY_DAU_CAM_OTO
+    nhom: quy_tac_tranh_vuot
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "hanhvi.quay_dau_cam == true"
+    ket_luan:
+      hanh_vi: "Ô tô quay đầu xe tại nơi cấm quay đầu"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      phat_bo_sung: { tru_diem: 2 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 4 }
+
+  - id: R_QUAY_DAU_CAM_XEMAY
+    nhom: quy_tac_tranh_vuot
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - "hanhvi.quay_dau_cam == true"
+    ket_luan:
+      hanh_vi: "Xe máy quay đầu xe tại nơi cấm quay đầu"
+      tien_phat_min: 800000
+      tien_phat_max: 1000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 3 }
+
+  - id: R_VUOT_CAM_OTO
+    nhom: quy_tac_tranh_vuot
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "hanhvi.vuot_cam == true"
+    ket_luan:
+      hanh_vi: "Ô tô vượt xe tại đoạn đường có biển cấm vượt"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 4 }
+
+  - id: R_VUOT_CAM_XEMAY
+    nhom: quy_tac_tranh_vuot
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - "hanhvi.vuot_cam == true"
+    ket_luan:
+      hanh_vi: "Xe máy vượt xe tại đoạn đường có biển cấm vượt"
+      tien_phat_min: 800000
+      tien_phat_max: 1000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 3 }
+
+  - id: R_NGUOC_CHIEU_OTO
+    nhom: quy_tac_tranh_vuot
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "hanhvi.nguoc_chieu == true"
+    ket_luan:
+      hanh_vi: "Ô tô đi ngược chiều trên đường một chiều / phần đường dành cho chiều ngược lại"
+      tien_phat_min: 18000000
+      tien_phat_max: 20000000
+      phat_bo_sung: { tru_diem: 4 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 9 }
+
+  - id: R_NGUOC_CHIEU_XEMAY
+    nhom: quy_tac_tranh_vuot
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - "hanhvi.nguoc_chieu == true"
+    ket_luan:
+      hanh_vi: "Xe máy đi ngược chiều trên đường một chiều"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      phat_bo_sung: { tru_diem: 4 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 7 }

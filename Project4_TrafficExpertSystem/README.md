@@ -94,33 +94,22 @@ câu hỏi bổ sung (khung mức UI) trong `traffic_es/knowledge/clarify.yaml`.
 
 ### Concept trong Knowledge Graph
 
-| Concept | Nhóm | Fact gắn (nếu có) | Ví dụ cách nói khớp |
-|---------|------|-------------------|---------------------|
-| Xe ô tô | `phuong_tien` | `phuongtien.loai=o_to` | ô tô, xe hơi, xe con, xe tải… |
-| Xe mô tô | `phuong_tien` | `phuongtien.loai=xe_may` | xe máy, mô tô, xe gắn máy… |
-| Nồng độ cồn | `nong_do_con` | (cần số đo) | uống rượu, bia, nhậu, say xỉn, thổi nồng độ… |
-| Tốc độ | `toc_do` | (cần số km/h) | quá tốc độ, vượt tốc độ, phóng nhanh… |
-| Không đội mũ bảo hiểm | `mu_bao_hiem` | `nguoi.khong_mu_bao_hiem` | không đội mũ, quên mũ bảo hiểm… |
-| Không thắt dây an toàn | `day_an_toan` | `nguoi.khong_day_an_toan` | không thắt dây, không dây an toàn… |
-| Vượt đèn đỏ | `tin_hieu` | `hanhvi.vuot_den_do` | vượt đèn, đèn đỏ, không chấp hành hiệu lệnh đèn… |
-| Không có GPLX | `giay_to` | `nguoi.coGPLX=false` | không bằng lái, chưa có bằng… |
-| Gây tai nạn | `tinh_tiet` | `tinhtiet.gay_tai_nan` | đâm, va chạm, tông, quẹt… |
-| Tái phạm | `tinh_tiet` | `tinhtiet.tai_pham` | tái phạm, vi phạm nhiều lần… |
+Phạm vi đã mở rộng theo `docs/PLAN_BO_SUNG_ND168.md` (P0–P4). Các nhóm chính:
 
-### Luật xử phạt đang suy diễn được
+| Nhóm | Ví dụ concept / fact | File luật |
+|------|----------------------|-----------|
+| Phương tiện | ô tô, xe máy, **xe đạp** | — |
+| Nồng độ cồn / ma túy | `chiso.nongDoCon_*`, `nguoi.co_chat_ma_tuy` | `nong_do_con.yaml`, `chat_kich_thich.yaml` |
+| Tốc độ | `chiso.tocDo` + suy `tocDoGioiHan` từ `boicanh.khuVuc` | `toc_do.yaml` + Func `gioi_han_theo_khu_vuc` |
+| An toàn & tín hiệu | mũ BH, dây AT, đèn đỏ/vàng, **hiệu lệnh CSGT** | `an_toan_tin_hieu.yaml` |
+| Giấy tờ / GPLX | không GPLX, chưa đủ tuổi, GPLX giả, ĐKX, đăng kiểm | `giay_to.yaml` |
+| Làn đường / tránh vượt / dừng đỗ | sai làn, quay đầu cấm, vượt cấm, ngược chiều, đỗ sai | `lan_duong.yaml`, `quy_tac_tranh_vuot.yaml`, `dung_do.yaml` |
+| Biển số | giả / che / sửa biển | `bien_so.yaml` |
+| Vận tải | quá tải, quá khổ, nhồi nhét, đón trả sai | `van_tai.yaml` |
+| Hành khách / đi bộ / chủ xe | gây rối, sai phần đường, giao xe không đủ ĐK | `hanh_khach.yaml`, `nguoi_di_bo.yaml`, `chu_xe.yaml` |
+| Tình tiết (meta) | gây tai nạn, tái phạm, không chấp hành… | `tinh_tiet.yaml` + meta trong `nong_do_con.yaml` |
 
-| Nhóm | Loại xe | Mức / nội dung chính | File luật |
-|------|---------|----------------------|-----------|
-| Nồng độ cồn | Ô tô, xe máy | 3 mức (≤0,25 / 0,25–0,4 / >0,4 mg/l khí thở hoặc tương đương máu) | `rules/nong_do_con.yaml` |
-| Vượt tốc độ | Ô tô | 5 đến dưới 10, 10–20, trên 20 đến 35, trên 35 km/h | `rules/toc_do.yaml` |
-| Vượt tốc độ | Xe máy | 5 đến dưới 10, 10–20, trên 20 km/h | `rules/toc_do.yaml` |
-| Mũ bảo hiểm | Xe máy | Không đội mũ / đội không đúng quy cách | `rules/an_toan_tin_hieu.yaml` |
-| Dây an toàn | Ô tô | Không thắt dây khi chạy | `rules/an_toan_tin_hieu.yaml` |
-| Tín hiệu đèn | Ô tô, xe máy | Không chấp hành đèn tín hiệu (vượt đèn đỏ) | `rules/an_toan_tin_hieu.yaml` |
-| Giấy tờ | Ô tô, xe máy | Điều khiển xe không có GPLX | `rules/an_toan_tin_hieu.yaml` |
-| Tình tiết | (meta) | Tăng nặng / giảm nhẹ (vd. gây tai nạn) | `rules/tinh_tiet.yaml` |
-
-> Chưa cover toàn bộ Nghị định 168 — chỉ các nhóm trên. Thêm lỗi mới: bổ sung concept + keyphrase trong KG, luật trong `rules/`, và (nếu cần hỏi khung) mục trong `clarify.yaml`.
+> Số liệu khung phạt cần đối chiếu văn bản gốc NĐ 168 khi dùng chính thức. Kế hoạch bổ sung chi tiết: `docs/PLAN_BO_SUNG_ND168.md`.
 
 ## Kiểm thử
 

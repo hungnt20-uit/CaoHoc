@@ -1,0 +1,60 @@
+# Nhóm: VẬN TẢI ĐƯỜNG BỘ — Nghị định 168/2024/NĐ-CP
+rules:
+  - id: R_CHO_QUA_TAI
+    nhom: van_tai
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - any:
+          - "hanhvi.cho_qua_tai == true"
+          - "chiso.ty_le_qua_tai > 0"
+    ket_luan:
+      hanh_vi: "Vận chuyển hàng hóa vượt quá khối lượng cho phép của xe / cầu đường"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 24 }
+
+  - id: R_CHO_QUA_KHO
+    nhom: van_tai
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "hanhvi.cho_qua_kho == true"
+    ket_luan:
+      hanh_vi: "Vận chuyển hàng hóa vượt quá khổ giới hạn cho phép"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 24 }
+
+  - id: R_CHO_QUA_SO_NGUOI
+    nhom: van_tai
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - any:
+          - "hanhvi.cho_qua_so_nguoi == true"
+          - "chiso.so_nguoi_vuot > 0"
+    ket_luan:
+      hanh_vi: "Xe chở người / xe khách chở quá số người quy định"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 23 }
+
+  - id: R_DON_TRA_KHACH_SAI
+    nhom: van_tai
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "hanhvi.don_tra_khach_sai == true"
+    ket_luan:
+      hanh_vi: "Đón, trả khách không đúng nơi quy định hoặc trên đường cao tốc"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 23 }
+
+  - id: R_THU_TIEN_QUA_GIA_VE
+    nhom: van_tai
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "hanhvi.thu_tien_qua_gia_ve == true"
+    ket_luan:
+      hanh_vi: "Thu tiền cước / giá vé cao hơn mức niêm yết"
+      tien_phat_min: 1000000
+      tien_phat_max: 2000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 23 }

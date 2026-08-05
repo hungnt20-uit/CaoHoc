@@ -1,0 +1,29 @@
+# Nhóm: BIỂN SỐ XE — Nghị định 168/2024/NĐ-CP
+rules:
+  - id: R_BIEN_SO_GIA_OTO
+    nhom: bien_so
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - any:
+          - "hanhvi.bien_so_gia == true"
+          - "hanhvi.che_bien_so == true"
+          - "hanhvi.sua_bien_so == true"
+    ket_luan:
+      hanh_vi: "Ô tô sử dụng biển số giả / che biển số / làm thay đổi chữ số ký hiệu biển số"
+      tien_phat_min: 20000000
+      tien_phat_max: 26000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 19 }
+
+  - id: R_BIEN_SO_GIA_XEMAY
+    nhom: bien_so
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - any:
+          - "hanhvi.bien_so_gia == true"
+          - "hanhvi.che_bien_so == true"
+          - "hanhvi.sua_bien_so == true"
+    ket_luan:
+      hanh_vi: "Xe máy sử dụng biển số giả / che biển số / làm thay đổi chữ số ký hiệu biển số"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 20 }

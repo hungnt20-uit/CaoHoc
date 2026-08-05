@@ -40,10 +40,8 @@ def to_markdown(rep: Dict[str, Any]) -> str:
         "- **Engine ký hiệu chính xác tuyệt đối và tất định**: mọi sai số đến từ tầng NLU "
         "(bộ trích heuristic), không phải từ suy diễn pháp lý. Khi Facts đúng, kết luận & "
         "căn cứ luôn đúng.",
-        "- **Ca sai điển hình (c19)**: câu *\"chạy 75 km/h trong khu dân cư\"* — hệ chưa suy ra "
-        "giới hạn tốc độ (50 km/h) từ loại khu vực, nên không tính được mức vượt. Đây là "
-        "hạn chế đã biết của bộ trích offline; khắc phục bằng luật suy giới hạn theo khu vực "
-        "hoặc dùng `LLMExtractor`.",
+        "- **Giới hạn khu vực**: Func `gioi_han_theo_khu_vuc` suy `tocDoGioiHan` từ "
+        "`boicanh.khuVuc` (vd. khu dân cư → 50 km/h) — ca c19 đã pass trên bộ mở rộng.",
         "- **Thời gian**: suy diễn cực nhanh (đơn vị ms) do engine thuần Python trên KB nhỏ; "
         "phù hợp phản hồi thời gian thực trong chatbot.",
         "- **Tái lập**: kết quả dùng HeuristicExtractor nên hoàn toàn tái lập, không phụ thuộc "

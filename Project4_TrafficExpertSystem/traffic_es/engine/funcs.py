@@ -45,7 +45,27 @@ def _vuot_toc_do_kmh(wm: WorkingMemory) -> float:
     return wm.get("chiso.tocDo") - wm.get("chiso.tocDoGioiHan")
 
 
+# Giới hạn tốc độ mặc định theo loại khu vực (QCVN / thực tiễn phổ biến).
+# Chỉ điền khi chưa có chiso.tocDoGioiHan tường minh trong facts.
+_GIOI_HAN_KHU_VUC = {
+    "khu_dan_cu": 50.0,
+    "do_thi": 60.0,
+    "ngoai_do_thi": 80.0,
+    "cao_toc": 120.0,
+}
+
+
+def _gioi_han_theo_khu_vuc(wm: WorkingMemory) -> float:
+    return _GIOI_HAN_KHU_VUC[wm.get("boicanh.khuVuc")]
+
+
 DEFAULT_FUNCS: List[Func] = [
+    Func(
+        "gioi_han_theo_khu_vuc",
+        ["boicanh.khuVuc"],
+        "chiso.tocDoGioiHan",
+        _gioi_han_theo_khu_vuc,
+    ),
     Func(
         "vuot_toc_do_pct",
         ["chiso.tocDo", "chiso.tocDoGioiHan"],

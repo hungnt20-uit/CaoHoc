@@ -100,5 +100,5 @@ meta_rules:
     loai: tinh_tiet
     dieu_kien: ["tinhtiet.gay_tai_nan == true"]
     chon_muc: max
-    ap_dung_nhom: [nong_do_con, toc_do, tin_hieu]
+    ap_dung_nhom: [nong_do_con, toc_do, tin_hieu, chat_kich_thich, lan_duong, quy_tac_tranh_vuot]
     ghi_chu: "Tình tiết tăng nặng: gây tai nạn → áp mức tiền tối đa của khung."

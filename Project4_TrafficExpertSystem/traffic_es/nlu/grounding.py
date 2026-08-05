@@ -17,7 +17,15 @@ NUMBER = "number"
 BOOL = "bool"
 ENUM = "enum"
 
-_KNOWN_PREFIX = ("phuongtien.", "nguoi.", "chiso.", "boicanh.", "tinhtiet.", "hanhvi.")
+_KNOWN_PREFIX = (
+    "phuongtien.",
+    "nguoi.",
+    "chiso.",
+    "boicanh.",
+    "tinhtiet.",
+    "hanhvi.",
+    "giayto.",
+)
 
 
 @dataclass(frozen=True)
@@ -40,11 +48,14 @@ def _enum(*values: str) -> Slot:
 
 SCHEMA: Dict[str, Slot] = {
     # ── Phương tiện ──
-    "phuongtien.loai": _enum("o_to", "xe_may"),
+    "phuongtien.loai": _enum("o_to", "xe_may", "xe_dap"),
     # ── Người điều khiển ──
     "nguoi.coGPLX": Slot(BOOL),
     "nguoi.khong_mu_bao_hiem": Slot(BOOL),
     "nguoi.khong_day_an_toan": Slot(BOOL),
+    "nguoi.co_chat_ma_tuy": Slot(BOOL),
+    "nguoi.chua_du_tuoi_lai_xe": Slot(BOOL),
+    "nguoi.gplx_khong_dung_tham_quyen": Slot(BOOL),
     # ── Chỉ số đo lường ──
     "chiso.nongDoCon_khiTho": _num(0.0, 5.0, "mg/l"),
     "chiso.nongDoCon_mau": _num(0.0, 500.0, "mg/100ml"),
@@ -52,11 +63,45 @@ SCHEMA: Dict[str, Slot] = {
     "chiso.tocDoGioiHan": _num(0.0, 150.0, "km/h"),
     "chiso.vuot_toc_do_kmh": _num(-300.0, 300.0, "km/h"),
     "chiso.vuot_toc_do_pct": _num(-100.0, 1000.0, "%"),
+    "chiso.ty_le_qua_tai": _num(0.0, 500.0, "%"),
+    "chiso.so_nguoi_vuot": _num(0.0, 200.0, "nguoi"),
     # ── Bối cảnh ──
     "boicanh.khuVuc": _enum("khu_dan_cu", "do_thi", "ngoai_do_thi", "cao_toc"),
     "boicanh.thoiDiem": _enum("ban_ngay", "ban_dem"),
+    "boicanh.vi_tri_cam_do": Slot(BOOL),
+    # ── Giấy tờ ──
+    "giayto.khong_co_dang_ky_xe": Slot(BOOL),
+    "giayto.khong_mang_dang_ky_xe": Slot(BOOL),
+    "giayto.khong_mang_dang_kiem": Slot(BOOL),
+    "giayto.het_han_dang_kiem": Slot(BOOL),
     # ── Hành vi ──
     "hanhvi.vuot_den_do": Slot(BOOL),
+    "hanhvi.vuot_den_vang": Slot(BOOL),
+    "hanhvi.khong_chap_hanh_csgt": Slot(BOOL),
+    "hanhvi.sai_lan": Slot(BOOL),
+    "hanhvi.sai_phan_duong": Slot(BOOL),
+    "hanhvi.chuyen_lan_khong_tin_hieu": Slot(BOOL),
+    "hanhvi.quay_dau_cam": Slot(BOOL),
+    "hanhvi.vuot_cam": Slot(BOOL),
+    "hanhvi.nguoc_chieu": Slot(BOOL),
+    "hanhvi.dung_do_sai": Slot(BOOL),
+    "hanhvi.bien_so_gia": Slot(BOOL),
+    "hanhvi.che_bien_so": Slot(BOOL),
+    "hanhvi.sua_bien_so": Slot(BOOL),
+    "hanhvi.cho_qua_tai": Slot(BOOL),
+    "hanhvi.cho_qua_kho": Slot(BOOL),
+    "hanhvi.cho_qua_so_nguoi": Slot(BOOL),
+    "hanhvi.don_tra_khach_sai": Slot(BOOL),
+    "hanhvi.thu_tien_qua_gia_ve": Slot(BOOL),
+    "hanhvi.hanh_khach_gay_roi": Slot(BOOL),
+    "hanhvi.hanh_khach_du_bam": Slot(BOOL),
+    "hanhvi.hanh_khach_mo_cua_khi_xe_chay": Slot(BOOL),
+    "hanhvi.nguoi_di_bo_sai_phan_duong": Slot(BOOL),
+    "hanhvi.vuot_dai_phan_cach": Slot(BOOL),
+    "hanhvi.nguoi_di_bo_khong_chap_hanh_den": Slot(BOOL),
+    "hanhvi.giao_xe_nguoi_khong_du_dk": Slot(BOOL),
+    "hanhvi.thay_doi_may_khung": Slot(BOOL),
+    "hanhvi.thay_doi_mau_son_trai_quy_dinh": Slot(BOOL),
 }
 
 # Tình tiết lấy trực tiếp từ closed vocabulary của Bài toán 1 để không bị lệch nhau.

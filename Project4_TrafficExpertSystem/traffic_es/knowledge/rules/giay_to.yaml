@@ -1,0 +1,107 @@
+# Nhóm: GIẤY TỜ / GPLX — Nghị định 168/2024/NĐ-CP
+# Tách từ an_toan_tin_hieu.yaml (P2.4) + mở rộng chưa đủ tuổi / GPLX không đúng thẩm quyền.
+rules:
+  - id: R_NOGPLX_OTO
+    nhom: giay_to
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "nguoi.coGPLX == false"
+    ket_luan:
+      hanh_vi: "Điều khiển ô tô mà không có giấy phép lái xe"
+      tien_phat_min: 18000000
+      tien_phat_max: 20000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 18, khoan: 9, diem: "b" }
+
+  - id: R_NOGPLX_XEMAY
+    nhom: giay_to
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - "nguoi.coGPLX == false"
+    ket_luan:
+      hanh_vi: "Điều khiển xe máy mà không có giấy phép lái xe"
+      tien_phat_min: 2000000
+      tien_phat_max: 4000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 18, khoan: 5, diem: "a" }
+
+  - id: R_GPLX_CHUA_DU_TUOI_OTO
+    nhom: giay_to
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "nguoi.chua_du_tuoi_lai_xe == true"
+    ket_luan:
+      hanh_vi: "Điều khiển ô tô khi chưa đủ tuổi theo quy định"
+      tien_phat_min: 18000000
+      tien_phat_max: 20000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 18, khoan: 9 }
+
+  - id: R_GPLX_CHUA_DU_TUOI_XEMAY
+    nhom: giay_to
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - "nguoi.chua_du_tuoi_lai_xe == true"
+    ket_luan:
+      hanh_vi: "Điều khiển xe máy khi chưa đủ tuổi theo quy định"
+      tien_phat_min: 2000000
+      tien_phat_max: 4000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 18, khoan: 5 }
+
+  - id: R_GPLX_KHONG_DUNG_THAM_QUYEN_OTO
+    nhom: giay_to
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "nguoi.gplx_khong_dung_tham_quyen == true"
+    ket_luan:
+      hanh_vi: "Sử dụng GPLX không do cơ quan có thẩm quyền cấp (ô tô)"
+      tien_phat_min: 18000000
+      tien_phat_max: 20000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 18, khoan: 9 }
+
+  - id: R_GPLX_KHONG_DUNG_THAM_QUYEN_XEMAY
+    nhom: giay_to
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - "nguoi.gplx_khong_dung_tham_quyen == true"
+    ket_luan:
+      hanh_vi: "Sử dụng GPLX không do cơ quan có thẩm quyền cấp (xe máy)"
+      tien_phat_min: 2000000
+      tien_phat_max: 4000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 18, khoan: 5 }
+
+  - id: R_KHONG_DANG_KY_XE_OTO
+    nhom: giay_to
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - any:
+          - "giayto.khong_co_dang_ky_xe == true"
+          - "giayto.khong_mang_dang_ky_xe == true"
+    ket_luan:
+      hanh_vi: "Không có / không mang theo Giấy chứng nhận đăng ký xe (ô tô)"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 19 }
+
+  - id: R_KHONG_DANG_KY_XE_XEMAY
+    nhom: giay_to
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - any:
+          - "giayto.khong_co_dang_ky_xe == true"
+          - "giayto.khong_mang_dang_ky_xe == true"
+    ket_luan:
+      hanh_vi: "Không có / không mang theo Giấy chứng nhận đăng ký xe (xe máy)"
+      tien_phat_min: 800000
+      tien_phat_max: 1000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 20 }
+
+  - id: R_KHONG_DANG_KIEM_OTO
+    nhom: giay_to
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - any:
+          - "giayto.khong_mang_dang_kiem == true"
+          - "giayto.het_han_dang_kiem == true"
+    ket_luan:
+      hanh_vi: "Không mang theo / hết hạn giấy chứng nhận kiểm định an toàn kỹ thuật (ô tô)"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 19 }

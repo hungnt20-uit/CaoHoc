@@ -35,7 +35,7 @@ def _leaf_conditions(node):
 
 
 def test_conditions_reference_known_namespaces():
-    ok = ("phuongtien.", "nguoi.", "chiso.", "boicanh.", "tinhtiet.", "hanhvi.")
+    ok = ("phuongtien.", "nguoi.", "chiso.", "boicanh.", "tinhtiet.", "hanhvi.", "giayto.")
     for r in load_rules(RULES_DIR):
         for node in r.dieu_kien:
             for cond in _leaf_conditions(node):

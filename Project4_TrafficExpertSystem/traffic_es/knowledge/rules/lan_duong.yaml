@@ -1,0 +1,63 @@
+# Nhóm: LÀN ĐƯỜNG / PHẦN ĐƯỜNG — Nghị định 168/2024/NĐ-CP
+rules:
+  - id: R_SAI_LAN_OTO
+    nhom: lan_duong
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - any:
+          - "hanhvi.sai_lan == true"
+          - "hanhvi.sai_phan_duong == true"
+    ket_luan:
+      hanh_vi: "Ô tô đi không đúng làn đường hoặc phần đường quy định"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      phat_bo_sung: { tru_diem: 2 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 4 }
+
+  - id: R_SAI_LAN_XEMAY
+    nhom: lan_duong
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - any:
+          - "hanhvi.sai_lan == true"
+          - "hanhvi.sai_phan_duong == true"
+    ket_luan:
+      hanh_vi: "Xe máy đi không đúng làn đường hoặc phần đường quy định"
+      tien_phat_min: 800000
+      tien_phat_max: 1000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 3 }
+
+  - id: R_CHUYEN_LAN_KHONG_TIN_HIEU_OTO
+    nhom: lan_duong
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "hanhvi.chuyen_lan_khong_tin_hieu == true"
+    ket_luan:
+      hanh_vi: "Ô tô chuyển làn không có tín hiệu báo trước"
+      tien_phat_min: 800000
+      tien_phat_max: 1000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 2 }
+
+  - id: R_CHUYEN_LAN_KHONG_TIN_HIEU_XEMAY
+    nhom: lan_duong
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - "hanhvi.chuyen_lan_khong_tin_hieu == true"
+    ket_luan:
+      hanh_vi: "Xe máy chuyển làn không có tín hiệu báo trước"
+      tien_phat_min: 400000
+      tien_phat_max: 600000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 1 }
+
+  - id: R_SAI_LAN_XEDAP
+    nhom: lan_duong
+    ap_dung_loai_xe: [xe_dap]
+    dieu_kien:
+      - any:
+          - "hanhvi.sai_lan == true"
+          - "hanhvi.sai_phan_duong == true"
+    ket_luan:
+      hanh_vi: "Xe đạp / xe thô sơ đi không đúng phần đường quy định"
+      tien_phat_min: 200000
+      tien_phat_max: 400000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 9 }

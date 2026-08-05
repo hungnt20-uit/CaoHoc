@@ -1,0 +1,27 @@
+# Nhóm: DỪNG / ĐỖ XE — Nghị định 168/2024/NĐ-CP
+rules:
+  - id: R_DUNG_DO_SAI_OTO
+    nhom: dung_do
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - any:
+          - "hanhvi.dung_do_sai == true"
+          - "boicanh.vi_tri_cam_do == true"
+    ket_luan:
+      hanh_vi: "Ô tô dừng, đỗ không đúng quy định / tại vị trí cấm"
+      tien_phat_min: 800000
+      tien_phat_max: 1000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 2 }
+
+  - id: R_DUNG_DO_SAI_XEMAY
+    nhom: dung_do
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - any:
+          - "hanhvi.dung_do_sai == true"
+          - "boicanh.vi_tri_cam_do == true"
+    ket_luan:
+      hanh_vi: "Xe máy dừng, đỗ không đúng quy định / tại vị trí cấm"
+      tien_phat_min: 400000
+      tien_phat_max: 600000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 1 }

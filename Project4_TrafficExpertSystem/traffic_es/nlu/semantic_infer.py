@@ -72,6 +72,14 @@ TRUNG_LAP: Dict[str, Tuple[TrungLap, ...]] = {
             "hanhvi.vuot_den_do",
             ("đèn đỏ", "đèn tín hiệu", "hiệu lệnh đèn", "tín hiệu giao thông", "vượt đèn"),
         ),
+        TrungLap(
+            "hanhvi.vuot_den_vang",
+            ("đèn vàng", "vượt đèn vàng"),
+        ),
+        TrungLap(
+            "hanhvi.khong_chap_hanh_csgt",
+            ("csgt", "cảnh sát giao thông", "hiệu lệnh của cảnh sát"),
+        ),
     ),
 }
 

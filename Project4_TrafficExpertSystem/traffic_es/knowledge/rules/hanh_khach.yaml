@@ -1,0 +1,34 @@
+# Nhóm: HÀNH KHÁCH — Nghị định 168/2024/NĐ-CP
+rules:
+  - id: R_HANH_KHACH_GAY_ROI
+    nhom: hanh_khach
+    ap_dung_loai_xe: []
+    dieu_kien:
+      - "hanhvi.hanh_khach_gay_roi == true"
+    ket_luan:
+      hanh_vi: "Hành khách gây mất trật tự / đe dọa, xâm phạm sức khỏe người trên xe"
+      tien_phat_min: 1000000
+      tien_phat_max: 2000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 11 }
+
+  - id: R_HANH_KHACH_DU_BAM
+    nhom: hanh_khach
+    ap_dung_loai_xe: []
+    dieu_kien:
+      - "hanhvi.hanh_khach_du_bam == true"
+    ket_luan:
+      hanh_vi: "Hành khách đu bám thành xe khi xe đang chạy"
+      tien_phat_min: 400000
+      tien_phat_max: 600000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 11 }
+
+  - id: R_HANH_KHACH_MO_CUA
+    nhom: hanh_khach
+    ap_dung_loai_xe: []
+    dieu_kien:
+      - "hanhvi.hanh_khach_mo_cua_khi_xe_chay == true"
+    ket_luan:
+      hanh_vi: "Hành khách tự ý mở cửa khi xe đang chạy"
+      tien_phat_min: 400000
+      tien_phat_max: 600000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 11 }

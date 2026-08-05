@@ -1,0 +1,26 @@
+# Nhóm: MA TÚY / CHẤT KÍCH THÍCH — Nghị định 168/2024/NĐ-CP
+# Số liệu tham chiếu công bố phổ biến; cần đối chiếu văn bản gốc khi số hóa chính thức.
+rules:
+  - id: R_MATUY_OTO
+    nhom: chat_kich_thich
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "nguoi.co_chat_ma_tuy == true"
+    ket_luan:
+      hanh_vi: "Điều khiển ô tô mà trong cơ thể có chất ma túy"
+      tien_phat_min: 30000000
+      tien_phat_max: 40000000
+      phat_bo_sung: { tuoc_gplx_thang: [22, 24] }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 11 }
+
+  - id: R_MATUY_XEMAY
+    nhom: chat_kich_thich
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - "nguoi.co_chat_ma_tuy == true"
+    ket_luan:
+      hanh_vi: "Điều khiển xe máy mà trong cơ thể có chất ma túy"
+      tien_phat_min: 8000000
+      tien_phat_max: 10000000
+      phat_bo_sung: { tuoc_gplx_thang: [22, 24] }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 10 }

@@ -1,0 +1,25 @@
+# Nhóm: CHỦ PHƯƠNG TIỆN — Nghị định 168/2024/NĐ-CP
+rules:
+  - id: R_GIAO_XE_KHONG_DU_DK
+    nhom: chu_xe
+    ap_dung_loai_xe: []
+    dieu_kien:
+      - "hanhvi.giao_xe_nguoi_khong_du_dk == true"
+    ket_luan:
+      hanh_vi: "Chủ phương tiện giao xe cho người không đủ điều kiện điều khiển"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 30 }
+
+  - id: R_CAI_TAO_XE_TRAI_PHEP
+    nhom: chu_xe
+    ap_dung_loai_xe: []
+    dieu_kien:
+      - any:
+          - "hanhvi.thay_doi_may_khung == true"
+          - "hanhvi.thay_doi_mau_son_trai_quy_dinh == true"
+    ket_luan:
+      hanh_vi: "Tự ý thay đổi tổng thành máy, khung xe hoặc màu sơn trái quy định"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 30 }

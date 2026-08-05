@@ -1,0 +1,25 @@
+# Nhóm: NGƯỜI ĐI BỘ — Nghị định 168/2024/NĐ-CP
+rules:
+  - id: R_NGB_SAI_PHAN_DUONG
+    nhom: nguoi_di_bo
+    ap_dung_loai_xe: []
+    dieu_kien:
+      - any:
+          - "hanhvi.nguoi_di_bo_sai_phan_duong == true"
+          - "hanhvi.vuot_dai_phan_cach == true"
+    ket_luan:
+      hanh_vi: "Người đi bộ đi không đúng phần đường / vượt qua dải phân cách"
+      tien_phat_min: 200000
+      tien_phat_max: 400000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 10 }
+
+  - id: R_NGB_KHONG_CHAP_HANH_DEN
+    nhom: nguoi_di_bo
+    ap_dung_loai_xe: []
+    dieu_kien:
+      - "hanhvi.nguoi_di_bo_khong_chap_hanh_den == true"
+    ket_luan:
+      hanh_vi: "Người đi bộ không chấp hành hiệu lệnh đèn tín hiệu giao thông"
+      tien_phat_min: 200000
+      tien_phat_max: 400000
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 10 }

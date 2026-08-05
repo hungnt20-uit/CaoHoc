@@ -45,6 +45,17 @@ SAMPLE_PROBLEMS: List[SampleProblem] = [
         ],
     ),
     SampleProblem(
+        name="Vi phạm tốc độ (suy giới hạn theo khu vực)",
+        mp={"phuongtien.loai", "chiso.tocDo", "boicanh.khuVuc"},
+        goal="Suy tocDoGioiHan từ khu vực rồi xác định mức phạt vượt tốc độ",
+        sol=[
+            "Deduce_Objects: chiso.tocDoGioiHan ← boicanh.khuVuc (Func gioi_han_theo_khu_vuc)",
+            "Deduce_Objects (A*): chiso.vuot_toc_do_kmh = tocDo − tocDoGioiHan",
+            "Deduce_Rules: đối chiếu ngưỡng vượt trong nhóm luật 'toc_do'",
+            "Aggregate: gộp tiền phạt",
+        ],
+    ),
+    SampleProblem(
         name="Nồng độ cồn",
         mp={"phuongtien.loai"},
         mp_any=[{"chiso.nongDoCon_khiTho", "chiso.nongDoCon_mau"}],

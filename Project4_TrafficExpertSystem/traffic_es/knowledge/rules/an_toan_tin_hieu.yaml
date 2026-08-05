@@ -1,5 +1,5 @@
 # Nhóm hành vi: AN TOÀN & TÍN HIỆU — Nghị định 168/2024/NĐ-CP
-# Số liệu & căn cứ trích, kiểm chứng từ văn bản gốc.
+# GPLX đã tách sang giay_to.yaml (P2.4). Bổ sung đèn vàng + hiệu lệnh CSGT (P0.2).
 rules:
   - id: R_MU_XEMAY
     nhom: mu_bao_hiem
@@ -47,24 +47,50 @@ rules:
       phat_bo_sung: { tru_diem: 4 }
       can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 7, diem: "c" }
 
-  - id: R_NOGPLX_OTO
-    nhom: giay_to
+  - id: R_DENVANG_OTO
+    nhom: tin_hieu
     ap_dung_loai_xe: [o_to]
     dieu_kien:
-      - "nguoi.coGPLX == false"
+      - "hanhvi.vuot_den_vang == true"
     ket_luan:
-      hanh_vi: "Điều khiển ô tô mà không có giấy phép lái xe"
+      hanh_vi: "Ô tô không chấp hành hiệu lệnh đèn vàng / đèn tín hiệu giao thông"
       tien_phat_min: 18000000
       tien_phat_max: 20000000
-      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 18, khoan: 9, diem: "b" }
+      phat_bo_sung: { tru_diem: 4 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 9, diem: "b" }
 
-  - id: R_NOGPLX_XEMAY
-    nhom: giay_to
+  - id: R_DENVANG_XEMAY
+    nhom: tin_hieu
     ap_dung_loai_xe: [xe_may]
     dieu_kien:
-      - "nguoi.coGPLX == false"
+      - "hanhvi.vuot_den_vang == true"
     ket_luan:
-      hanh_vi: "Điều khiển xe máy mà không có giấy phép lái xe"
-      tien_phat_min: 2000000
-      tien_phat_max: 4000000
-      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 18, khoan: 5, diem: "a" }
+      hanh_vi: "Xe máy không chấp hành hiệu lệnh đèn vàng / đèn tín hiệu giao thông"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      phat_bo_sung: { tru_diem: 4 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 7, diem: "c" }
+
+  - id: R_CSGT_OTO
+    nhom: tin_hieu
+    ap_dung_loai_xe: [o_to]
+    dieu_kien:
+      - "hanhvi.khong_chap_hanh_csgt == true"
+    ket_luan:
+      hanh_vi: "Ô tô không chấp hành hiệu lệnh, hướng dẫn của CSGT / người điều khiển giao thông"
+      tien_phat_min: 18000000
+      tien_phat_max: 20000000
+      phat_bo_sung: { tru_diem: 4 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 6, khoan: 9, diem: "c" }
+
+  - id: R_CSGT_XEMAY
+    nhom: tin_hieu
+    ap_dung_loai_xe: [xe_may]
+    dieu_kien:
+      - "hanhvi.khong_chap_hanh_csgt == true"
+    ket_luan:
+      hanh_vi: "Xe máy không chấp hành hiệu lệnh, hướng dẫn của CSGT / người điều khiển giao thông"
+      tien_phat_min: 4000000
+      tien_phat_max: 6000000
+      phat_bo_sung: { tru_diem: 4 }
+      can_cu: { nghi_dinh: "168/2024/NĐ-CP", dieu: 7, khoan: 7, diem: "d" }
